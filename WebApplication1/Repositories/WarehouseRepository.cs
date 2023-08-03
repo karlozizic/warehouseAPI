@@ -44,17 +44,10 @@ public class WarehouseRepository : IWarehouseRepository, IDisposable
     public async Task DeleteWarehouse(Guid id)
     {
         Warehouse? warehouse = await _warehouseContext.Warehouses.FindAsync(id);
-        if (warehouse != null)
-        {
-            // Radimo soft delete - ne brisemo iz baze nego samo postavljamo deleted na true
-            //_warehouseContext.Warehouses.Remove(warehouse);
-            warehouse.deleted = true;
-            await _warehouseContext.SaveChangesAsync();
-        }
-        else
-        {
-            throw new Exception("Warehouse with id " + id + " not found!");
-        }
+        // Radimo soft delete - ne brisemo iz baze nego samo postavljamo deleted na true
+        //_warehouseContext.Warehouses.Remove(warehouse);
+        warehouse.deleted = true;
+        await _warehouseContext.SaveChangesAsync();
     }
 
     public async Task UpdateWarehouse(Warehouse warehouse)
@@ -62,8 +55,30 @@ public class WarehouseRepository : IWarehouseRepository, IDisposable
         _warehouseContext.Entry(warehouse).State = EntityState.Modified;
         await _warehouseContext.SaveChangesAsync();
     }
+    
+    public async Task AssignOperator(FranchiseUser franchiseUser, Guid warehouseId)
+    {
+        Warehouse? warehouse = await _warehouseContext.Warehouses.FindAsync(warehouseId);
+        warehouse.OperatorUser = franchiseUser;
+        await _warehouseContext.SaveChangesAsync();
+    }
+    
+    public async Task<List<Item>> GetWarehouseItems(Guid warehouseId)
+    {
+        
+        return await _warehouseContext.Warehouses
+            .Where(x => x.id == warehouseId)
+            .SelectMany(x => x.items)
+            .ToListAsync();
+    }
+    
+    public async Task<FranchiseUser> GetOperator(Guid warehouseId)
+    {
+        Warehouse? warehouse = await _warehouseContext.Warehouses.FindAsync(warehouseId);
+        return warehouse.OperatorUser;
+    }
 
-    // ** Je li dispose potreban? - https://learn.microsoft.com/en-us/aspnet/mvc/overview/older-versions/getting-started-with-ef-5-using-mvc-4/implementing-the-repository-and-unit-of-work-patterns-in-an-asp-net-mvc-application
+    // https://learn.microsoft.com/en-us/aspnet/mvc/overview/older-versions/getting-started-with-ef-5-using-mvc-4/implementing-the-repository-and-unit-of-work-patterns-in-an-asp-net-mvc-application
     // Implementacija IDisposable interface-a 
     private bool disposed = false;
     protected virtual void Dispose(bool disposing)

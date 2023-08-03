@@ -47,4 +47,37 @@ public class WarehouseService : IWarehouseService
         
         await _warehouseRepository.UpdateWarehouse(warehouse);
     }
+    
+    public async Task AssignOperator(FranchiseUser franchiseUser, Guid warehouseId)
+    {
+        if (!await _warehouseRepository.Exists(warehouseId))
+        {
+            throw new Exception("Warehouse does not exist");
+        }
+        
+        if(await _warehouseRepository.GetOperator(warehouseId) != null)
+        {
+            throw new Exception("Warehouse already has an operator");
+        }
+        
+        await _warehouseRepository.AssignOperator(franchiseUser, warehouseId);
+    }
+    
+    public async Task<List<Item>> GetWarehouseItems(Guid warehouseId, String? name)
+    {
+        if (!await _warehouseRepository.Exists(warehouseId))
+        {
+            throw new Exception("Warehouse does not exist");
+        }
+        
+        List<Item> items = await _warehouseRepository.GetWarehouseItems(warehouseId);
+
+        if (name != null)
+        {
+            List<Item> filteredItems = items.Where(item => item.name == name).ToList();
+            return filteredItems;
+        }
+
+        return items; 
+    }
 }

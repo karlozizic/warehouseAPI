@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApplication1.Database.Entities;
@@ -13,5 +14,6 @@ public class Item
     [MaxLength(1000, ErrorMessage = "Description cannot be longer than 1000 characters.")]
     public String? description { get; set; }
     public Guid tenantId { get; set; }
+    public Boolean deleted { get; set; }
 
 }

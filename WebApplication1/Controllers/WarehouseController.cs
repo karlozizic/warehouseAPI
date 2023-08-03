@@ -1,26 +1,28 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using WebApplication1.Database;
 using WebApplication1.Database.Entities;
-using WebApplication1.Repositories;
 using WebApplication1.Services;
+using X.Auth.Interface.Services;
+using X.Auth.Middleware.Attributes;
 
 namespace WebApplication1.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/public/[controller]/[action]")]
 public class WarehouseController : ControllerBase
 {
     private readonly ILogger<WarehouseController> _logger; 
     /*private readonly WarehouseContext _warehouseContext;*/
-    private IWarehouseService _warehouseService; 
-    public WarehouseController(ILogger<WarehouseController> logger, IWarehouseService warehouseService)
+    private readonly IWarehouseService _warehouseService;
+    private readonly IUserContextService _userContextService;
+
+    public WarehouseController(ILogger<WarehouseController> logger, IWarehouseService warehouseService, IUserContextService userContextService)
     {
         _logger = logger;
         _warehouseService = warehouseService;
+        _userContextService = userContextService;
     }
-
+    
     [HttpGet(Name = "GetWarehouses")]
     [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.OK)]
@@ -52,7 +54,7 @@ public class WarehouseController : ControllerBase
             return BadRequest(e.Message);
         }
     }
-
+    
     [HttpPost(Name = "InsertWarehouse")]
     [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.OK)]
@@ -62,7 +64,8 @@ public class WarehouseController : ControllerBase
         try
         {
             await _warehouseService.InsertWarehouse(warehouse);
-            return Ok();
+            
+            return Ok(warehouse);
         }
         catch (Exception e)
         {
@@ -101,5 +104,38 @@ public class WarehouseController : ControllerBase
             return BadRequest(e.Message);
         }
     }
-    
+
+    [HttpPost(Name="AssignOperator")]
+    [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    public async Task<IActionResult> AssignOperator([FromQuery] Guid warehouseId, [FromBody] FranchiseUser franchiseUser)
+    {
+        try
+        {
+            await _warehouseService.AssignOperator(franchiseUser, warehouseId);
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
+    [VerifyGrants("backoffice")]
+    [HttpGet(Name = "GetWarehouseItems")]
+    [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    public async Task<IActionResult> GetWarehouseItems([FromQuery] Guid warehouseId, [FromQuery] String? name)
+    {
+        try
+        {
+            var items = await _warehouseService.GetWarehouseItems(warehouseId, name);
+            return Ok(items);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
 }

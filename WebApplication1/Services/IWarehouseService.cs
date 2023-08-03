@@ -9,5 +9,8 @@ public interface IWarehouseService
     Task InsertWarehouse(Warehouse warehouse);
     Task DeleteWarehouse(Guid id);
     Task UpdateWarehouse(Warehouse warehouse);
+    Task AssignOperator(FranchiseUser franchiseUser, Guid warehouseId);
     
+    Task<List<Item>> GetWarehouseItems(Guid warehouseId, String? name);
+
 }

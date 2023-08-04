@@ -42,6 +42,8 @@ builder.Services.AddDbContext<WarehouseContext>();
 //Potrebno je autowireati Interface i realizaciju Interfacea
 builder.Services.AddScoped<IWarehouseRepository, WarehouseRepository>(); 
 builder.Services.AddScoped<IWarehouseService, WarehouseService>();
+builder.Services.AddScoped<ILocationRepository, LocationRepository>();
+builder.Services.AddScoped<ILocationService, LocationService>();
 
 //
 builder.Services.AddLogWriter(builder.Configuration);

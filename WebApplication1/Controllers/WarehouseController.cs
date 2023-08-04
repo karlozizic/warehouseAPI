@@ -130,6 +130,7 @@ public class WarehouseController : ControllerBase
         try
         {
             var items = await _warehouseService.GetWarehouseItems(warehouseId, name);
+            var user = _userContextService.UserContext; 
             return Ok(items);
         }
         catch (Exception e)

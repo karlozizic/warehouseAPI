@@ -35,6 +35,11 @@ public class WarehouseService : IWarehouseService
     
     public async Task DeleteWarehouse(Guid id)
     {
+        if (!await _warehouseRepository.Exists(id))
+        {
+            throw new Exception("Warehouse does not exist");
+        }
+        
         await _warehouseRepository.DeleteWarehouse(id);
     }
     

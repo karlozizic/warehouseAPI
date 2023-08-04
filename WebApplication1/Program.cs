@@ -53,6 +53,8 @@ builder.Services.AddLogWriter(builder.Configuration);
 builder.Services.AddAuthMiddleware(builder.Configuration);
 builder.Services.AddRequestService();
 builder.Services.AddConsul(builder.Configuration);
+//
+builder.Services.AddHttpClient(); 
 
 var app = builder.Build();
 

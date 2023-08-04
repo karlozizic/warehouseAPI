@@ -8,7 +8,9 @@ public class WarehouseContext : DbContext
     public DbSet<Warehouse> Warehouses { get; set; }
     public DbSet<Location> Locations { get; set; }
     public DbSet<Item> Items { get; set; }
-    
+    public DbSet<FranchiseUser> FranchiseUsers { get; set; }
+    public DbSet<User> Users { get; set; }
+
     IConfigurationRoot _configuration = new ConfigurationBuilder()
         .SetBasePath(Directory.GetCurrentDirectory())
         .AddJsonFile("appsettings.Development.json")

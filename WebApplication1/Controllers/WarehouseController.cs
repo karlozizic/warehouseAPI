@@ -16,12 +16,14 @@ public class WarehouseController : ControllerBase
     /*private readonly WarehouseContext _warehouseContext;*/
     private readonly IWarehouseService _warehouseService;
     private readonly IUserContextService _userContextService;
+    private readonly IRetailService _retailService;
 
-    public WarehouseController(ILogger<WarehouseController> logger, IWarehouseService warehouseService, IUserContextService userContextService)
+    public WarehouseController(ILogger<WarehouseController> logger, IWarehouseService warehouseService, IUserContextService userContextService, IRetailService retailService)
     {
         _logger = logger;
         _warehouseService = warehouseService;
         _userContextService = userContextService;
+        _retailService = retailService;
     }
     
     [HttpGet(Name = "GetWarehouses")]
@@ -140,4 +142,21 @@ public class WarehouseController : ControllerBase
         }
     }
 
+    [VerifyGrants("backoffice")]
+    [HttpPost(Name = "FetchWarehouses")]
+    [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    public async Task<IActionResult> FetchWarehouses([FromQuery] string? name, [FromQuery] string? city)
+    {
+        try
+        {
+            var warehouses = await _retailService.FetchWarehouses(_userContextService.UserContext.TenantId, name, city);
+            return Ok(warehouses);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
 }

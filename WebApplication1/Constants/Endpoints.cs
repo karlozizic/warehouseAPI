@@ -2,7 +2,7 @@
 
 public static class Endpoints
 {
-    public const string CostCenters = "api/CostCenter/GetCostCentersInternal";
+    public const string CostCenters = "/api/CostCenter/GetCostCentersInternal";
     public const string Users = "/api/public/Users/GetUsers";
     public const string FranchiseUsers = "/api/FranchiseUser/Users";
 }

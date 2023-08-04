@@ -19,19 +19,18 @@ public class RetailService : IRetailService
         
     }
     // potrebno je dodati CostCenterFilter
-    public async Task<List<CostCenterDto>> FetchLocations(Guid tenantId, string? name, string? city, CostCenterFilter filter = null)
+    public async Task<List<CostCenterDto>> FetchWarehouses(Guid tenantId, string? name, string? city)
     {
         var retailUrlPort = await _requestService.FetchServiceDetails(Guid.Empty, ApiNames.RetailApi);
         
-        var payload = filter ?? new CostCenterFilter()
+        var payload = new CostCenterFilter()
         {
             TenantId = tenantId,
             PartialName = name,
             PartialCity = city
         };
 
-        var response = await _httpClient.PostAsJsonAsync(Url.RetailUrl + retailUrlPort + Endpoints.CostCenters, payload); 
-        
+        var response = await _httpClient.PostAsJsonAsync(retailUrlPort + Endpoints.CostCenters, payload); 
         if (response.IsSuccessStatusCode)
         {
             List<CostCenterDto> locations = response.Content.ReadFromJsonAsync<List<CostCenterDto>>().Result;
@@ -44,5 +43,5 @@ public class RetailService : IRetailService
 
 public interface IRetailService
 {   
-    Task<List<CostCenterDto>> FetchLocations(Guid tenantId, string? name, string? city, CostCenterFilter filter);
+    Task<List<CostCenterDto>> FetchWarehouses(Guid tenantId, string? name, string? city);
 }

@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Database.Entities;
+using WebApplication1.Interfaces;
 using WebApplication1.Services;
 using X.Auth.Interface.Services;
 using X.Auth.Middleware.Attributes;

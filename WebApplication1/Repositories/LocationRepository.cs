@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WebApplication1.Database;
 using WebApplication1.Database.Entities;
+using WebApplication1.Interfaces;
 
 namespace WebApplication1.Repositories;
 

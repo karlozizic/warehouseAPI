@@ -1,6 +1,6 @@
 ﻿using WebApplication1.Database.Entities;
 
-namespace WebApplication1.Services;
+namespace WebApplication1.Interfaces;
 
 public interface ILocationService
 {

@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
+using WebApplication1.Interfaces;
 using WebApplication1.Services;
 
 namespace WebApplication1.Controllers;

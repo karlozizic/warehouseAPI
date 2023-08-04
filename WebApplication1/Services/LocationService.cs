@@ -1,4 +1,5 @@
 ﻿using WebApplication1.Database.Entities;
+using WebApplication1.Interfaces;
 using WebApplication1.Repositories;
 
 namespace WebApplication1.Services;

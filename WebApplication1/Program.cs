@@ -1,6 +1,5 @@
 using System.Net;
 using System.Text.Json.Serialization;
-using Microsoft.EntityFrameworkCore;
 using WebApplication1.Database;
 using WebApplication1.Interfaces;
 using WebApplication1.Repositories;
@@ -15,14 +14,13 @@ var builder = WebApplication.CreateBuilder(args);
 var bindingConfig = new ConfigurationBuilder().AddCommandLine(args).Build();
 
 var port = bindingConfig.GetValue<int?>("port") ?? FreePorts.Find();
+// sljedeci kod se inace ne konfigurira unutar Program.cs
 builder.Services.AddCors();
+//
 builder.Services.AddOptions(); 
-// Add services to the container.
-builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddMemoryCache();
-builder.Services.AddMemoryCache(); 
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddControllers()
@@ -32,10 +30,12 @@ builder.Services.AddControllers()
         o.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
     });
 
+// sljedeci kod se inace ne konfigurira unutar Program.cs
 builder.WebHost.UseKestrel(options =>
 {
     options.Listen(IPAddress.Any, port);
 });
+//
 
 //WarehouseContext
 builder.Services.AddDbContext<WarehouseContext>();
@@ -55,6 +55,7 @@ builder.Services.AddAuthMiddleware(builder.Configuration);
 builder.Services.AddRequestService();
 builder.Services.AddConsul(builder.Configuration);
 //
+
 builder.Services.AddHttpClient(); 
 
 var app = builder.Build();

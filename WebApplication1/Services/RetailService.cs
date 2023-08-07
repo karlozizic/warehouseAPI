@@ -19,10 +19,8 @@ public class RetailService : IRetailService
         _httpClient = httpClient;
         
     }
-    // potrebno je dodati CostCenterFilter
     public async Task<List<X.Retail.Shared.Models.Models.Dtos.CostCenterDto>> FetchWarehouses(Guid tenantId, string? name, string? city)
     {
-        var retailUrlPort = await _requestService.FetchServiceDetails(Guid.Empty, ApiNames.RetailApi);
         
         var payload = new CostCenterFilter()
         {
@@ -31,14 +29,14 @@ public class RetailService : IRetailService
             PartialCity = city
         };
 
-        var response = await _httpClient.PostAsJsonAsync(retailUrlPort + Endpoints.CostCenters, payload); 
-        if (response.IsSuccessStatusCode)
-        {
-            List<X.Retail.Shared.Models.Models.Dtos.CostCenterDto> locations = response.Content.ReadFromJsonAsync<List<X.Retail.Shared.Models.Models.Dtos.CostCenterDto>>().Result;
-            return locations;
-        }
-        
-        return new List<CostCenterDto>();
+        //if response.IsSuccessStatusCode
+
+        return await _requestService.PostWithDiscovery<List<CostCenterDto>>(
+            Guid.Empty, 
+            ApiNames.RetailApi,
+            Endpoints.CostCenters,
+            payload: payload
+            );
     }
     
     

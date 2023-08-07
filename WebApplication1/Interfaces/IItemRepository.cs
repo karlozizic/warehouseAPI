@@ -4,6 +4,6 @@ namespace WebApplication1.Interfaces;
 
 public interface IItemRepository
 {
-    Task UpdateItem(Item warehouseItem);
+    Task UpdateItem(ItemEntity warehouseItemEntity);
     Task<Boolean> ExistsItem(Guid id);
 }

@@ -2,7 +2,7 @@
 
 namespace WebApplication1.Database.Entities;
 
-public class FranchiseUser
+public class FranchiseUserEntity
 {
     [Key]
     public Guid Id { get; set; }
@@ -12,4 +12,5 @@ public class FranchiseUser
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
     public string? Username { get; set; }
+    public Guid TenantId { get; set; }
 }

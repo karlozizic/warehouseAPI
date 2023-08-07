@@ -61,14 +61,14 @@ public class WarehouseController : ControllerBase
     [HttpPost(Name = "InsertWarehouse")]
     [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.OK)]
-    public async Task<IActionResult> Insert([FromBody] Warehouse warehouse)
+    public async Task<IActionResult> Insert([FromBody] WarehouseEntity warehouseEntity)
     {
         //nije potrebno ModelState.IsValid jer se automatski validira 
         try
         {
-            await _warehouseService.InsertWarehouse(warehouse);
+            await _warehouseService.InsertWarehouse(warehouseEntity);
             
-            return Ok(warehouse);
+            return Ok(warehouseEntity);
         }
         catch (Exception e)
         {
@@ -95,11 +95,11 @@ public class WarehouseController : ControllerBase
     [HttpPut(Name = "UpdateWarehouse")]
     [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.OK)]
-    public async Task<IActionResult> Update([FromBody] Warehouse warehouse)
+    public async Task<IActionResult> Update([FromBody] WarehouseEntity warehouseEntity)
     {
         try
         {
-            await _warehouseService.UpdateWarehouse(warehouse);
+            await _warehouseService.UpdateWarehouse(warehouseEntity);
             return Ok();
         }
         catch (Exception e)
@@ -111,11 +111,11 @@ public class WarehouseController : ControllerBase
     [HttpPost(Name="AssignOperator")]
     [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.OK)]
-    public async Task<IActionResult> AssignOperator([FromQuery] Guid warehouseId, [FromBody] FranchiseUser franchiseUser)
+    public async Task<IActionResult> AssignOperator([FromQuery] Guid warehouseId, [FromBody] FranchiseUserEntity franchiseUserEntity)
     {
         try
         {
-            await _warehouseService.AssignOperator(franchiseUser, warehouseId);
+            await _warehouseService.AssignOperator(franchiseUserEntity, warehouseId);
             return Ok();
         }
         catch (Exception e)

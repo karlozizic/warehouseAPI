@@ -4,5 +4,5 @@ namespace WebApplication1.Interfaces;
 
 public interface IItemService
 {
-    Task UpdateItem(Item warehouseItem);
+    Task UpdateItem(ItemEntity warehouseItemEntity);
 }

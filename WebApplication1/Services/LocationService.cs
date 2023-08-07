@@ -13,7 +13,7 @@ public class LocationService : ILocationService
         _locationRepository = locationRepository;
     }
     
-    public async Task<List<Location>> GetLocations()
+    public async Task<List<LocationEntity>> GetLocations()
     {
         return await _locationRepository.GetLocations();
     }

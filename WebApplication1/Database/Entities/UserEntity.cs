@@ -2,7 +2,7 @@
 
 namespace WebApplication1.Database.Entities;
 
-public class User
+public class UserEntity
 {
     [Key]
     public Guid Id { get; set; }
@@ -14,4 +14,5 @@ public class User
     public DateTime? CreatedDateTime { get; set; }
     public List<string>? GrantGroups { get; set; }
     public Boolean Deleted { get; set; }
+    public Guid TenantId { get; set; }
 }

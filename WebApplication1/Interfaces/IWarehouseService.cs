@@ -5,14 +5,14 @@ namespace WebApplication1.Interfaces;
 
 public interface IWarehouseService
 {
-    Task<List<Warehouse>> GetWarehouses();
-    Task<Warehouse> GetWarehouseById(Guid id);
-    Task InsertWarehouse(Warehouse warehouse);
+    Task<List<WarehouseEntity>> GetWarehouses();
+    Task<WarehouseEntity> GetWarehouseById(Guid id);
+    Task InsertWarehouse(WarehouseEntity warehouseEntity);
     Task DeleteWarehouse(Guid id);
-    Task UpdateWarehouse(Warehouse warehouse);
-    Task AssignOperator(FranchiseUser franchiseUser, Guid warehouseId);
+    Task UpdateWarehouse(WarehouseEntity warehouseEntity);
+    Task AssignOperator(FranchiseUserEntity franchiseUserEntity, Guid warehouseId);
     
-    Task<List<Item>> GetWarehouseItems(Guid warehouseId, String? name);
+    Task<List<ItemEntity>> GetWarehouseItems(Guid warehouseId, String? name);
     
     Task InsertWarehouses(List<CostCenterDto> warehouses);
 

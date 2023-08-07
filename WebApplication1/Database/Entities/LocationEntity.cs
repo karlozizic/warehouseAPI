@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace WebApplication1.Database.Entities;
 
 [ComplexType]
-public class Location
+public class LocationEntity
 {
     [Key]
     public Guid Id { get; set; }
@@ -19,7 +19,7 @@ public class Location
     
     public string? Longitude { get; set; }
     
-    public Location(string address, string city, string? postalCode, string? latitude, string? longitude)
+    public LocationEntity(string address, string city, string? postalCode, string? latitude, string? longitude)
     {
         Id = Guid.NewGuid();
         this.Address = address;
@@ -29,7 +29,7 @@ public class Location
         this.Longitude = longitude;
     }
 
-    public Location()
+    public LocationEntity()
     {
     }
 

@@ -14,9 +14,9 @@ public class LocationRepository : ILocationRepository, IDisposable
         _warehouseContext = warehouseContext;
     }
     
-    public async Task<List<Location>> GetLocations()
+    public async Task<List<LocationEntity>> GetLocations()
     {
-        return await _warehouseContext.Locations.ToListAsync();
+        return await _warehouseContext.Location.ToListAsync();
     }
     
     // https://learn.microsoft.com/en-us/aspnet/mvc/overview/older-versions/getting-started-with-ef-5-using-mvc-4/implementing-the-repository-and-unit-of-work-patterns-in-an-asp-net-mvc-application

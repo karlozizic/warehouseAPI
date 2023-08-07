@@ -12,14 +12,14 @@ public class ItemService : IItemService
         _itemRepository = itemRepository;
     }
     
-    public async Task UpdateItem(Item warehouseItem)
+    public async Task UpdateItem(ItemEntity warehouseItemEntity)
     {
-        if (!await _itemRepository.ExistsItem(warehouseItem.Id))
+        if (!await _itemRepository.ExistsItem(warehouseItemEntity.Id))
         {
             throw new Exception("Item does not exist");
         }
 
-        await _itemRepository.UpdateItem(warehouseItem);
+        await _itemRepository.UpdateItem(warehouseItemEntity);
     }
 
 }

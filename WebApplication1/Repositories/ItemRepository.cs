@@ -14,14 +14,14 @@ public class ItemRepository : IItemRepository
         _warehouseContext = warehouseContext;
     }
     
-    public async Task UpdateItem(Item warehouseItem)
+    public async Task UpdateItem(ItemEntity warehouseItemEntity)
     {
-        _warehouseContext.Entry(warehouseItem).State = EntityState.Modified;
+        _warehouseContext.Entry(warehouseItemEntity).State = EntityState.Modified;
         await _warehouseContext.SaveChangesAsync();
     }
     
     public async Task<Boolean> ExistsItem(Guid id)
     {
-        return await _warehouseContext.Items.AnyAsync(e => e.Id == id);
+        return await _warehouseContext.Item.AnyAsync(e => e.Id == id);
     }
 }

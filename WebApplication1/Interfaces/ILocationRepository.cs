@@ -4,5 +4,5 @@ namespace WebApplication1.Interfaces;
 
 public interface ILocationRepository : IDisposable
 {
-    public Task<List<Location>> GetLocations();
+    public Task<List<LocationEntity>> GetLocations();
 }

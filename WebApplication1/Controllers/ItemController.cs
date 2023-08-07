@@ -25,11 +25,11 @@ public class ItemController : ControllerBase
     [HttpPut(Name = "UpdateWarehouseItem")]
     [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.OK)]
-    public async Task<IActionResult> UpdateWarehouseItem([FromBody] Item warehouseItem)
+    public async Task<IActionResult> UpdateWarehouseItem([FromBody] ItemEntity warehouseItemEntity)
     {
         try
         {
-            await _itemService.UpdateItem(warehouseItem); 
+            await _itemService.UpdateItem(warehouseItemEntity); 
             return Ok();
         }
         catch (Exception e)

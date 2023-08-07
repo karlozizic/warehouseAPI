@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApplication1.Database.Entities;
 
-public class Item
+public class ItemEntity
 {
     [Key]
     public Guid Id { get; set; }

@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 using WebApplication1.Database;
 using WebApplication1.Interfaces;
 using WebApplication1.Repositories;
@@ -36,11 +37,13 @@ builder.WebHost.UseKestrel(options =>
     options.Listen(IPAddress.Any, port);
 });
 //
-
-//WarehouseContext
+// DbContext
 builder.Services.AddDbContext<WarehouseContext>();
+/*builder.Services.AddDbContext<WarehouseContext>(
+    options => options.UseNpgsql(builder.Configuration.GetConnectionString("WarehouseAppConnection")));*/
+//
 
-//Potrebno je autowireati Interface i realizaciju Interfacea
+// Potrebno je autowireati Interface i realizaciju Interfacea
 builder.Services.AddScoped<IWarehouseRepository, WarehouseRepository>(); 
 builder.Services.AddScoped<IWarehouseService, WarehouseService>();
 builder.Services.AddScoped<ILocationRepository, LocationRepository>();
@@ -71,6 +74,5 @@ app.UseRouting();
 app.UseRefreshAuthMiddleware();
 app.UseAuthorization();
 app.MapControllers();
-
 
 app.Run();

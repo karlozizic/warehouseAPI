@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json;
-using WebApplication1.Constants;
-using WebApplication1.Models;
+﻿using WebApplication1.Constants;
 using X.Consul.Interface.Constants;
 using X.Consul.Interface.Services;
 using X.Retail.Shared.Models.Filters;
+using X.Retail.Shared.Models.Models.Dtos;
+using X.Retail.Shared.Models.Requests;
 using CostCenterDto = X.Retail.Shared.Models.Models.Dtos.CostCenterDto;
 
 namespace WebApplication1.Services;
@@ -39,10 +39,26 @@ public class RetailService : IRetailService
             );
     }
     
-    
+    public async Task<List<FranchiseUserDto>> FetchFranchiseUsers(Guid tenantId)
+    {
+        var payload = new FranchiseUsersFilterRequest()
+        {
+            TenantId = tenantId
+        };
+
+        return await _requestService.PostWithDiscovery<List<FranchiseUserDto>>(
+            Guid.Empty, 
+            ApiNames.RetailApi,
+            Endpoints.FranchiseUsers,
+            payload: payload
+        );
+    }
+
+
 }
 
 public interface IRetailService
 {   
     Task<List<X.Retail.Shared.Models.Models.Dtos.CostCenterDto>> FetchWarehouses(Guid tenantId, string? name, string? city);
+    Task<List<X.Retail.Shared.Models.Models.Dtos.FranchiseUserDto>> FetchFranchiseUsers(Guid tenantId);
 }

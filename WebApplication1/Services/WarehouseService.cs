@@ -1,16 +1,19 @@
 ﻿using WebApplication1.Database.Entities;
 using WebApplication1.Interfaces;
 using WebApplication1.Repositories;
+using X.Retail.Shared.Models.Models.Dtos;
 
 namespace WebApplication1.Services;
 
 public class WarehouseService : IWarehouseService
 {
     private readonly IWarehouseRepository _warehouseRepository;
+    private readonly ILocationRepository _locationRepository;
     
-    public WarehouseService(IWarehouseRepository warehouseRepository)
+    public WarehouseService(IWarehouseRepository warehouseRepository, ILocationRepository locationRepository)
     {
         _warehouseRepository = warehouseRepository;
+        _locationRepository = locationRepository;
     }
     
     public async Task<List<Warehouse>> GetWarehouses()
@@ -26,7 +29,7 @@ public class WarehouseService : IWarehouseService
     
     public async Task InsertWarehouse(Warehouse warehouse)
     {
-        if (await _warehouseRepository.Exists(warehouse.id))
+        if (await _warehouseRepository.Exists(warehouse.Id))
         {
             throw new Exception("Warehouse already exists"); 
         }
@@ -46,7 +49,7 @@ public class WarehouseService : IWarehouseService
     
     public async Task UpdateWarehouse(Warehouse warehouse)
     {
-        if (!await _warehouseRepository.Exists(warehouse.id))
+        if (!await _warehouseRepository.Exists(warehouse.Id))
         {
             throw new Exception("Warehouse does not exist");
         }
@@ -80,10 +83,31 @@ public class WarehouseService : IWarehouseService
 
         if (name != null)
         {
-            List<Item> filteredItems = items.Where(item => item.name == name).ToList();
+            List<Item> filteredItems = items.Where(item => item.Name == name).ToList();
             return filteredItems;
         }
 
         return items; 
+    }
+    
+    public async Task InsertWarehouses(List<CostCenterDto> warehouses)
+    {
+        foreach (var warehouse in warehouses)
+        {
+            if (await _warehouseRepository.Exists(warehouse.Id))
+            {
+                throw new Exception("Warehouse already exists"); 
+            }
+            //dodati provjeru postoji li vec lokacija
+            var location = new Location(warehouse.Address, warehouse.City, warehouse.PostalCode, warehouse.GpsInfo.Latitude, warehouse.GpsInfo.Longitude); 
+            /*var newWarehouse = new Warehouse(warehouse.Id, warehouse.Name, location, warehouse.PhoneNumber,
+                warehouse.Code, warehouse.DateTimeCreatedUtc, warehouse.Deleted, warehouse.DefaultLanguage,
+                warehouse.DateOpenUtc, warehouse.DateClosedUtc, warehouse.IsPayoutLockedForOtherCostCenter); */
+            
+            /*
+            await _warehouseRepository.InsertWarehouse(newWarehouse);
+        */
+        }
+        
     }
 }

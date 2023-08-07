@@ -14,7 +14,7 @@ public class ItemService : IItemService
     
     public async Task UpdateItem(Item warehouseItem)
     {
-        if (!await _itemRepository.ExistsItem(warehouseItem.id))
+        if (!await _itemRepository.ExistsItem(warehouseItem.Id))
         {
             throw new Exception("Item does not exist");
         }

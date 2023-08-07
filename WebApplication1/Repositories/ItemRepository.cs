@@ -22,6 +22,6 @@ public class ItemRepository : IItemRepository
     
     public async Task<Boolean> ExistsItem(Guid id)
     {
-        return await _warehouseContext.Items.AnyAsync(e => e.id == id);
+        return await _warehouseContext.Items.AnyAsync(e => e.Id == id);
     }
 }

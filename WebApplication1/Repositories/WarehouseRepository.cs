@@ -32,7 +32,7 @@ public class WarehouseRepository : IWarehouseRepository, IDisposable
 
     public async Task<Boolean> Exists(Guid id)
     {
-        return await _warehouseContext.Warehouses.AnyAsync(x => x.id == id);
+        return await _warehouseContext.Warehouses.AnyAsync(x => x.Id == id);
     }
     
     // ** Sljedeci blok metoda vraca void, ali asinkrone su pa se vraca Task 
@@ -47,7 +47,7 @@ public class WarehouseRepository : IWarehouseRepository, IDisposable
         Warehouse? warehouse = await _warehouseContext.Warehouses.FindAsync(id);
         // Radimo soft delete - ne brisemo iz baze nego samo postavljamo deleted na true
         //_warehouseContext.Warehouses.Remove(warehouse);
-        warehouse.deleted = true;
+        warehouse.Deleted = true;
         await _warehouseContext.SaveChangesAsync();
     }
 
@@ -68,8 +68,8 @@ public class WarehouseRepository : IWarehouseRepository, IDisposable
     {
         
         return await _warehouseContext.Warehouses
-            .Where(x => x.id == warehouseId)
-            .SelectMany(x => x.items)
+            .Where(x => x.Id == warehouseId)
+            .SelectMany(x => x.Items)
             .ToListAsync();
     }
     

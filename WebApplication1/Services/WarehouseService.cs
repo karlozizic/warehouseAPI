@@ -29,10 +29,10 @@ public class WarehouseService : IWarehouseService
     
     public async Task InsertWarehouse(Warehouse warehouse)
     {
-        if (await _warehouseRepository.Exists(warehouse.Id))
+        /*if (await _warehouseRepository.Exists(warehouse.Id))
         {
             throw new Exception("Warehouse already exists"); 
-        }
+        }*/
         
         await _warehouseRepository.InsertWarehouse(warehouse);
     }

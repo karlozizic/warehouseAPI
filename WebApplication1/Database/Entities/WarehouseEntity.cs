@@ -15,13 +15,10 @@ public class WarehouseEntity
     /*[Required]*/
     public LocationEntity? Location { get; set; } 
     
-    public string PhoneNumber { get; set; }
-    public string Code {get; set; }
-    public DateTime DateTimeCreatedUtc { get; set; }
+    public string? PhoneNumber { get; set; }
+    public string? Code {get; set; }
     public bool Deleted { get; set; }
-    public string DefaultLanguage { get; set; }
-    public DateTime? DateOpenUtc { get; set; }
-    public DateTime? DateClosedUtc { get; set; }
+    public string? DefaultLanguage { get; set; }
     public bool IsPayoutLockedForOtherCostCenter { get; set; }
     public FranchiseUserEntity? OperatorUser { get; set; }
     //promijeni List u IQueryable - kako bi se optimizirali upiti prema bazi podataka 
@@ -30,8 +27,8 @@ public class WarehouseEntity
     [Required]
     public Guid TenantId { get; set; }
 
-    public WarehouseEntity(Guid id, string name, string phoneNumber, string code, DateTime dateTimeCreatedUtc, bool deleted,
-        string defaultLanguage, DateTime? dateOpenUtc, DateTime? dateClosedUtc, bool isPayoutLockedForOtherCostCenter)
+    public WarehouseEntity(Guid id, string name, string? phoneNumber, string? code, bool deleted,
+        string? defaultLanguage, bool isPayoutLockedForOtherCostCenter)
 
     {
         this.Id = id;
@@ -40,18 +37,15 @@ public class WarehouseEntity
         this.Location = null; 
         this.PhoneNumber = phoneNumber;
         this.Code = code;
-        this.DateTimeCreatedUtc = dateTimeCreatedUtc;
         this.Deleted = deleted;
         this.DefaultLanguage = defaultLanguage;
-        this.DateOpenUtc = dateOpenUtc;
-        this.DateClosedUtc = dateClosedUtc;
         this.IsPayoutLockedForOtherCostCenter = isPayoutLockedForOtherCostCenter;
         this.OperatorUser = null;
         this.Items = null;
     }
     
-    public WarehouseEntity(string name, string phoneNumber, string code, DateTime dateTimeCreatedUtc, bool deleted,
-        string defaultLanguage, DateTime? dateOpenUtc, DateTime? dateClosedUtc, bool isPayoutLockedForOtherCostCenter)
+    public WarehouseEntity(string name, string phoneNumber, string code, bool deleted,
+        string defaultLanguage, bool isPayoutLockedForOtherCostCenter)
     {
         this.Id = Guid.NewGuid();
         this.Name = name;
@@ -59,11 +53,8 @@ public class WarehouseEntity
         this.Location = null; 
         this.PhoneNumber = phoneNumber;
         this.Code = code;
-        this.DateTimeCreatedUtc = dateTimeCreatedUtc;
         this.Deleted = deleted;
         this.DefaultLanguage = defaultLanguage;
-        this.DateOpenUtc = dateOpenUtc;
-        this.DateClosedUtc = dateClosedUtc;
         this.IsPayoutLockedForOtherCostCenter = isPayoutLockedForOtherCostCenter;
         this.OperatorUser = null;
         this.Items = null;

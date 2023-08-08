@@ -19,14 +19,12 @@ public class LocationEntity
     
     public string? Longitude { get; set; }
     
-    public LocationEntity(string address, string city, string? postalCode, string? latitude, string? longitude)
+    public LocationEntity(string address, string city, string? postalCode)
     {
         Id = Guid.NewGuid();
         this.Address = address;
         this.City = city;
         this.postalCode = postalCode;
-        this.Latitude = latitude;
-        this.Longitude = longitude;
     }
 
     public LocationEntity()

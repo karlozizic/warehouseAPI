@@ -92,22 +92,25 @@ public class WarehouseService : IWarehouseService
     
     public async Task InsertWarehouses(List<CostCenterDto> warehouses)
     {
+        List<WarehouseEntity> warehouseEntities = new List<WarehouseEntity>();
+
         foreach (var warehouse in warehouses)
         {
-            if (await _warehouseRepository.Exists(warehouse.Id))
-            {
-                throw new Exception("Warehouse already exists"); 
-            }
-            //dodati provjeru postoji li vec lokacija
-            var location = new LocationEntity(warehouse.Address, warehouse.City, warehouse.PostalCode, warehouse.GpsInfo.Latitude, warehouse.GpsInfo.Longitude); 
-            /*var newWarehouse = new Warehouse(warehouse.Id, warehouse.Name, location, warehouse.PhoneNumber,
-                warehouse.Code, warehouse.DateTimeCreatedUtc, warehouse.Deleted, warehouse.DefaultLanguage,
-                warehouse.DateOpenUtc, warehouse.DateClosedUtc, warehouse.IsPayoutLockedForOtherCostCenter); */
-            
-            /*
-            await _warehouseRepository.InsertWarehouse(newWarehouse);
-        */
+            warehouseEntities.Add(new WarehouseEntity(warehouse.Id, warehouse.Name, warehouse.PhoneNumber,
+                warehouse.Code, warehouse.Deleted, warehouse.DefaultLanguage, warehouse.IsPayoutLockedForOtherCostCenter));
         }
+        
+        await _warehouseRepository.InsertAllWarehouses(warehouseEntities);
+
+        /*foreach (var warehouse in warehouses)
+        {
+            var newWarehouse = new WarehouseEntity(warehouse.Id, warehouse.Name, warehouse.PhoneNumber,
+                warehouse.Code, warehouse.Deleted, warehouse.DefaultLanguage, warehouse.IsPayoutLockedForOtherCostCenter);
+            var location = new LocationEntity(warehouse.Address, warehouse.City, warehouse.PostalCode);
+            newWarehouse.Location = location;
+            await _warehouseRepository.InsertWarehouse(newWarehouse);
+            //insert lokacije
+        }*/
         
     }
 }

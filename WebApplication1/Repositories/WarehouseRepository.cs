@@ -12,10 +12,12 @@ public class WarehouseRepository : IWarehouseRepository, IDisposable
     public WarehouseRepository(WarehouseContext warehouseContext)
     {
         _warehouseContext = warehouseContext;
+        //ContextService
     }
     
     public async Task<List<WarehouseEntity>> GetWarehouses()
     {
+        //await using (var context = contextService.CreateDbContext){ <tu se izvodi kod> }  
         //ToListAsync vraca Task<List<Warehouse>> - nije potrebno Task.FromResult(...)
         return await _warehouseContext.Warehouse.ToListAsync(); 
     }
@@ -77,6 +79,12 @@ public class WarehouseRepository : IWarehouseRepository, IDisposable
     {
         WarehouseEntity? warehouse = await _warehouseContext.Warehouse.FindAsync(warehouseId);
         return warehouse.OperatorUser;
+    }
+
+    public async Task InsertAllWarehouses(List<WarehouseEntity> warehouseEntities)
+    {
+        await _warehouseContext.Warehouse.AddRangeAsync(warehouseEntities);
+        await _warehouseContext.SaveChangesAsync(); 
     }
 
     // https://learn.microsoft.com/en-us/aspnet/mvc/overview/older-versions/getting-started-with-ef-5-using-mvc-4/implementing-the-repository-and-unit-of-work-patterns-in-an-asp-net-mvc-application

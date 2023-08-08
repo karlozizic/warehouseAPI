@@ -16,7 +16,6 @@ public class ContextService
     {
         var builder = new DbContextOptionsBuilder<WarehouseContext>();
         builder.UseNpgsql(_connectionString);
-
         return new WarehouseContext(builder.Options, tenantId);
     }*/
 }

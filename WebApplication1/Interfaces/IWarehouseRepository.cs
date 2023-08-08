@@ -13,4 +13,5 @@ public interface IWarehouseRepository : IDisposable
     public Task AssignOperator(FranchiseUserEntity franchiseUserEntity, Guid warehouseId);
     public Task<List<ItemEntity>> GetWarehouseItems(Guid warehouseId);
     public Task<FranchiseUserEntity> GetOperator(Guid warehouseId); 
+    public Task InsertAllWarehouses(List<WarehouseEntity> warehouseEntities);
 }

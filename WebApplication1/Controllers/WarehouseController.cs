@@ -67,7 +67,6 @@ public class WarehouseController : ControllerBase
         try
         {
             await _warehouseService.InsertWarehouse(warehouseEntity);
-            
             return Ok(warehouseEntity);
         }
         catch (Exception e)
@@ -133,7 +132,7 @@ public class WarehouseController : ControllerBase
         try
         {
             var items = await _warehouseService.GetWarehouseItems(warehouseId, name);
-            var user = _userContextService.UserContext; 
+            //var user = _userContextService.UserContext; 
             return Ok(items);
         }
         catch (Exception e)
@@ -151,8 +150,8 @@ public class WarehouseController : ControllerBase
         try
         {
             var warehouses = await _retailService.FetchWarehouses(_userContextService.UserContext.TenantId, name, city);
-            //await _warehouseService.InsertWarehouses(warehouses);
-            return Ok(warehouses);
+            await _warehouseService.InsertWarehouses(warehouses);
+            return Ok();
         }
         catch (Exception e)
         {

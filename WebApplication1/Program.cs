@@ -51,6 +51,8 @@ builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Services.AddScoped<IItemRepository, ItemRepository>();
 builder.Services.AddScoped<IItemService, ItemService>();
 builder.Services.AddScoped<IRetailService, RetailService>();
+builder.Services.AddScoped<IFranchiseUserRepository, FranchiseUserRepository>();
+builder.Services.AddScoped<IFranchiseUserService, FranchiseUserService>();
 
 //
 builder.Services.AddLogWriter(builder.Configuration);

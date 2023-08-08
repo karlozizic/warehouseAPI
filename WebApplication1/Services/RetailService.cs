@@ -1,4 +1,5 @@
-﻿using WebApplication1.Constants;
+﻿using System.Net;
+using WebApplication1.Constants;
 using X.Consul.Interface.Constants;
 using X.Consul.Interface.Services;
 using X.Retail.Shared.Models.Filters;
@@ -29,8 +30,6 @@ public class RetailService : IRetailService
             PartialCity = city
         };
 
-        //if response.IsSuccessStatusCode
-
         return await _requestService.PostWithDiscovery<List<CostCenterDto>>(
             Guid.Empty, 
             ApiNames.RetailApi,
@@ -46,13 +45,27 @@ public class RetailService : IRetailService
             TenantId = tenantId
         };
 
-        return await _requestService.PostWithDiscovery<List<FranchiseUserDto>>(
-            Guid.Empty, 
-            ApiNames.RetailApi,
-            Endpoints.FranchiseUsers,
-            payload: payload
-        );
+        var retailUrlPort = await _requestService.FetchServiceDetails(Guid.Empty, ApiNames.RetailApi);
+        string url = retailUrlPort + Endpoints.FranchiseUsers + "?tenantId=" + tenantId; 
+        var response = await _httpClient.GetAsync(url);
+
+        if (response.IsSuccessStatusCode)
+        {
+            if (response.StatusCode == HttpStatusCode.NoContent)
+            {
+                return new List<FranchiseUserDto>();
+            }
+
+            List<FranchiseUserDto> franchiseUsers = response.Content.ReadFromJsonAsync<List<FranchiseUserDto>>().Result;
+            return franchiseUsers;
+        }
+        else
+        {
+            throw new Exception("Error fetching franchise users");
+        }
+        
     }
+    
 
 
 }

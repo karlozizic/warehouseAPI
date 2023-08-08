@@ -23,6 +23,11 @@ public class WarehouseService : IWarehouseService
     
     public async Task<WarehouseEntity> GetWarehouseById(Guid id)
     {
+        if (!await _warehouseRepository.Exists(id))
+        {
+            throw new Exception("Warehouse does not exist");
+        }
+        
         return await _warehouseRepository.GetWarehouseById(id);
     }
     

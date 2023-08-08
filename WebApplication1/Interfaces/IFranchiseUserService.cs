@@ -5,4 +5,5 @@ namespace WebApplication1.Interfaces;
 public interface IFranchiseUserService
 {
     Task InsertFranchiseUsers(List<FranchiseUserDto> franchiseUsers);
+    
 }

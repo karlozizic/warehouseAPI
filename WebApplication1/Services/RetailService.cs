@@ -59,10 +59,9 @@ public class RetailService : IRetailService
             List<FranchiseUserDto> franchiseUsers = response.Content.ReadFromJsonAsync<List<FranchiseUserDto>>().Result;
             return franchiseUsers;
         }
-        else
-        {
-            throw new Exception("Error fetching franchise users");
-        }
+        
+        throw new Exception("Error fetching franchise users");
+        
         
     }
     

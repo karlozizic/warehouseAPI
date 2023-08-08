@@ -1,4 +1,5 @@
 ﻿using WebApplication1.Database.Entities;
+using WebApplication1.Models;
 
 namespace WebApplication1.Interfaces;
 
@@ -9,8 +10,7 @@ public interface IWarehouseRepository : IDisposable
     public Task<Boolean> Exists(Guid id); 
     public Task InsertWarehouse(WarehouseEntity warehouseEntity);
     public Task DeleteWarehouse(Guid id);
-    public Task UpdateWarehouse(WarehouseEntity warehouseEntity);
-    public Task AssignOperator(FranchiseUserEntity franchiseUserEntity, Guid warehouseId);
+    public Task UpdateWarehouse(WarehouseUpdateClass warehouseUpdateClass);
     public Task<List<ItemEntity>> GetWarehouseItems(Guid warehouseId);
     public Task<FranchiseUserEntity> GetOperator(Guid warehouseId); 
     public Task InsertAllWarehouses(List<WarehouseEntity> warehouseEntities);

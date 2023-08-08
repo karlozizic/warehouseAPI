@@ -10,12 +10,11 @@ public class WarehouseContext : DbContext
     /*public WarehouseContext()
     {
     }
-    
     public WarehouseContext(DbContextOptions options, Guid tenantId) : base(options)
     {
         _tenantId = tenantId;
     }*/
-
+    
     public virtual DbSet<WarehouseEntity> Warehouse { get; set; }
     public virtual DbSet<LocationEntity> Location { get; set; }
     public virtual DbSet<ItemEntity> Item { get; set; }

@@ -13,8 +13,7 @@ public class WarehouseEntity
     [MaxLength(100, ErrorMessage = "Name cannot be longer than 100 characters.")]
     public string Name { get; set; }
     /*[Required]*/
-    public LocationEntity? Location { get; set; } 
-    
+    public LocationEntity? Location { get; set; }
     public string? PhoneNumber { get; set; }
     public string? Code {get; set; }
     public bool Deleted { get; set; }
@@ -29,7 +28,6 @@ public class WarehouseEntity
 
     public WarehouseEntity(Guid id, string name, string? phoneNumber, string? code, bool deleted,
         string? defaultLanguage, bool isPayoutLockedForOtherCostCenter)
-
     {
         this.Id = id;
         this.Name = name;

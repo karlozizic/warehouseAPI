@@ -1,4 +1,5 @@
-﻿using WebApplication1.Database;
+﻿using Microsoft.EntityFrameworkCore;
+using WebApplication1.Database;
 using WebApplication1.Database.Entities;
 using WebApplication1.Interfaces;
 
@@ -17,5 +18,29 @@ public class FranchiseUserRepository : IFranchiseUserRepository
     {
         await _warehouseContext.FranchiseUser.AddRangeAsync(franchiseUserEntities);
         await _warehouseContext.SaveChangesAsync(); 
+    }
+    
+    public async Task<bool> Exists(Guid userId)
+    {
+        var franchiseUser = await _warehouseContext.FranchiseUser.FirstOrDefaultAsync(x => x.UserId == userId);
+        
+        if (franchiseUser == null)
+        {
+            return false;
+        }
+
+        return true; 
+    }
+    
+    public async Task<FranchiseUserEntity> GetFranchiseUserById(Guid userId)
+    {
+        var franchiseUser = await _warehouseContext.FranchiseUser.FirstOrDefaultAsync(x => x.UserId == userId);
+        
+        if (franchiseUser == null)
+        {
+            throw new Exception("Franchise user does not exist");
+        }
+
+        return franchiseUser; 
     }
 }

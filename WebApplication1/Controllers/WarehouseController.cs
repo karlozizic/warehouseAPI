@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Database.Entities;
 using WebApplication1.Interfaces;
+using WebApplication1.Models;
 using WebApplication1.Services;
 using X.Auth.Interface.Services;
 using X.Auth.Middleware.Attributes;
@@ -17,13 +18,16 @@ public class WarehouseController : ControllerBase
     private readonly IWarehouseService _warehouseService;
     private readonly IUserContextService _userContextService;
     private readonly IRetailService _retailService;
+    private readonly IFranchiseUserService _franchiseUserService;
 
-    public WarehouseController(ILogger<WarehouseController> logger, IWarehouseService warehouseService, IUserContextService userContextService, IRetailService retailService)
+    public WarehouseController(ILogger<WarehouseController> logger, IWarehouseService warehouseService, 
+        IUserContextService userContextService, IRetailService retailService, IFranchiseUserService franchiseUserService)
     {
         _logger = logger;
         _warehouseService = warehouseService;
         _userContextService = userContextService;
         _retailService = retailService;
+        _franchiseUserService = franchiseUserService;
     }
     
     [HttpGet(Name = "GetWarehouses")]
@@ -45,7 +49,7 @@ public class WarehouseController : ControllerBase
     [HttpGet("id", Name = "GetWarehouseById")]
     [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.OK)]
-    public async Task<IActionResult> Get(Guid id)
+    public async Task<IActionResult> Get([FromQuery] Guid id)
     {
         try
         { 
@@ -78,7 +82,7 @@ public class WarehouseController : ControllerBase
     [HttpDelete("id", Name = "DeleteWarehouse")]
     [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.OK)]
-    public async Task<IActionResult> Delete(Guid id)
+    public async Task<IActionResult> Delete([FromQuery] Guid id)
     {
         try
         {
@@ -94,7 +98,7 @@ public class WarehouseController : ControllerBase
     [HttpPut(Name = "UpdateWarehouse")]
     [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.OK)]
-    public async Task<IActionResult> Update([FromBody] WarehouseEntity warehouseEntity)
+    public async Task<IActionResult> Update([FromBody] WarehouseUpdateClass warehouseEntity)
     {
         try
         {
@@ -106,15 +110,16 @@ public class WarehouseController : ControllerBase
             return BadRequest(e.Message);
         }
     }
-
+    
+    [VerifyGrants("backoffice")]
     [HttpPost(Name="AssignOperator")]
     [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.OK)]
-    public async Task<IActionResult> AssignOperator([FromQuery] Guid warehouseId, [FromBody] FranchiseUserEntity franchiseUserEntity)
+    public async Task<IActionResult> AssignOperator([FromQuery] Guid warehouseId, [FromQuery] Guid franchiseUserId)
     {
         try
         {
-            await _warehouseService.AssignOperator(franchiseUserEntity, warehouseId);
+            await _warehouseService.AssignOperator(franchiseUserId, warehouseId);
             return Ok();
         }
         catch (Exception e)

@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using WebApplication1.Database;
 using WebApplication1.Database.Entities;
 using WebApplication1.Interfaces;
+using WebApplication1.Models;
 
 namespace WebApplication1.Repositories;
 
@@ -53,19 +55,58 @@ public class WarehouseRepository : IWarehouseRepository, IDisposable
         await _warehouseContext.SaveChangesAsync();
     }
 
-    public async Task UpdateWarehouse(WarehouseEntity warehouseEntity)
+    public async Task UpdateWarehouse(WarehouseUpdateClass warehouseUpdate)
     {
+        // sljedeci nacin nije radio
+        /*_warehouseContext.Attach(warehouseEntity); 
         _warehouseContext.Entry(warehouseEntity).State = EntityState.Modified;
+        await _warehouseContext.SaveChangesAsync();*/
+        
+        //provjera je li warehouse deleted 
+        
+        Guid id = warehouseUpdate.Id; 
+        WarehouseEntity? warehouseEntity = await _warehouseContext.Warehouse.SingleAsync(x => x.Id == id);
+
+        if (!warehouseUpdate.Name.IsNullOrEmpty())
+        {
+            warehouseEntity.Name = warehouseUpdate.Name;
+        }
+        if(warehouseUpdate.Location != null)
+        {
+            warehouseEntity.Location = warehouseUpdate.Location;
+        }
+        if (!warehouseUpdate.PhoneNumber.IsNullOrEmpty())
+        {
+            warehouseEntity.PhoneNumber = warehouseUpdate.PhoneNumber;
+        }
+        if (!warehouseUpdate.Code.IsNullOrEmpty())
+        {
+          warehouseEntity.Code = warehouseUpdate.Code;  
+        }
+        // nije moguce deleteati preko update requesta 
+        if (!warehouseUpdate.DefaultLanguage.IsNullOrEmpty())
+        {
+            warehouseEntity.DefaultLanguage = warehouseUpdate.DefaultLanguage;
+        }
+        // sto ako je warehouseUpdate.IsPayoutLockedForOtherCostCenter == null? 
+        if (warehouseUpdate.IsPayoutLockedForOtherCostCenter)
+        {
+            warehouseEntity.IsPayoutLockedForOtherCostCenter = true;
+        }
+        if (warehouseUpdate.OperatorUser != null)
+        {
+            warehouseEntity.OperatorUser = warehouseUpdate.OperatorUser;
+        }
+        // warehouse items update? 
+        if (warehouseUpdate.Items != null)
+        {
+            warehouseEntity.Items = warehouseUpdate.Items;
+        }
+        
         await _warehouseContext.SaveChangesAsync();
+
     }
-    
-    public async Task AssignOperator(FranchiseUserEntity franchiseUserEntity, Guid warehouseId)
-    {
-        WarehouseEntity? warehouse = await _warehouseContext.Warehouse.FindAsync(warehouseId);
-        warehouse.OperatorUser = franchiseUserEntity;
-        await _warehouseContext.SaveChangesAsync();
-    }
-    
+
     public async Task<List<ItemEntity>> GetWarehouseItems(Guid warehouseId)
     {
         

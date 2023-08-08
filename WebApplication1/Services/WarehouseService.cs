@@ -1,19 +1,19 @@
 ﻿using WebApplication1.Database.Entities;
 using WebApplication1.Interfaces;
-using WebApplication1.Repositories;
-using X.Retail.Shared.Models.Models.Dtos;
+using WebApplication1.Models;
+using CostCenterDto = X.Retail.Shared.Models.Models.Dtos.CostCenterDto;
 
 namespace WebApplication1.Services;
 
 public class WarehouseService : IWarehouseService
 {
     private readonly IWarehouseRepository _warehouseRepository;
-    private readonly ILocationRepository _locationRepository;
+    private readonly IFranchiseUserRepository _franchiseUserRepository; 
     
-    public WarehouseService(IWarehouseRepository warehouseRepository, ILocationRepository locationRepository)
+    public WarehouseService(IWarehouseRepository warehouseRepository, IFranchiseUserRepository franchiseUserRepository)
     {
-        _warehouseRepository = warehouseRepository;
-        _locationRepository = locationRepository;
+        _warehouseRepository = warehouseRepository; 
+        _franchiseUserRepository = franchiseUserRepository;
     }
     
     public async Task<List<WarehouseEntity>> GetWarehouses()
@@ -52,29 +52,38 @@ public class WarehouseService : IWarehouseService
         await _warehouseRepository.DeleteWarehouse(id);
     }
     
-    public async Task UpdateWarehouse(WarehouseEntity warehouseEntity)
+    public async Task UpdateWarehouse(WarehouseUpdateClass warehouseUpdateClass)
     {
-        if (!await _warehouseRepository.Exists(warehouseEntity.Id))
+        var id = warehouseUpdateClass.Id; 
+        if (!await _warehouseRepository.Exists(id))
         {
             throw new Exception("Warehouse does not exist");
         }
         
-        await _warehouseRepository.UpdateWarehouse(warehouseEntity);
+        await _warehouseRepository.UpdateWarehouse(warehouseUpdateClass);
     }
     
-    public async Task AssignOperator(FranchiseUserEntity franchiseUserEntity, Guid warehouseId)
+    public async Task AssignOperator(Guid franchiseUserId, Guid warehouseId)
     {
-        if (!await _warehouseRepository.Exists(warehouseId))
+        WarehouseEntity warehouse = await _warehouseRepository.GetWarehouseById(warehouseId);
+        if (warehouse == null)
         {
             throw new Exception("Warehouse does not exist");
         }
         
-        if(await _warehouseRepository.GetOperator(warehouseId) != null)
-        {
-            throw new Exception("Warehouse already has an operator");
-        }
+        FranchiseUserEntity franchiseUserEntity = await _franchiseUserRepository.GetFranchiseUserById(franchiseUserId);
         
-        await _warehouseRepository.AssignOperator(franchiseUserEntity, warehouseId);
+        if(franchiseUserEntity == null)
+        {
+            throw new Exception("Franchise user does not exist");
+        }
+
+        var warehouseUpdateClass = new WarehouseUpdateClass();
+        warehouseUpdateClass.Id = warehouseId;
+        warehouseUpdateClass.OperatorUser = franchiseUserEntity;
+        
+        await _warehouseRepository.UpdateWarehouse(warehouseUpdateClass);
+        
     }
     
     public async Task<List<ItemEntity>> GetWarehouseItems(Guid warehouseId, String? name)
@@ -107,15 +116,5 @@ public class WarehouseService : IWarehouseService
         
         await _warehouseRepository.InsertAllWarehouses(warehouseEntities);
 
-        /*foreach (var warehouse in warehouses)
-        {
-            var newWarehouse = new WarehouseEntity(warehouse.Id, warehouse.Name, warehouse.PhoneNumber,
-                warehouse.Code, warehouse.Deleted, warehouse.DefaultLanguage, warehouse.IsPayoutLockedForOtherCostCenter);
-            var location = new LocationEntity(warehouse.Address, warehouse.City, warehouse.PostalCode);
-            newWarehouse.Location = location;
-            await _warehouseRepository.InsertWarehouse(newWarehouse);
-            //insert lokacije
-        }*/
-        
     }
 }

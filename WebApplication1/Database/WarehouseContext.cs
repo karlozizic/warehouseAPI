@@ -7,13 +7,13 @@ public class WarehouseContext : DbContext
 {
     private readonly Guid _tenantId;
 
-    /*public WarehouseContext()
+    public WarehouseContext()
     {
     }
     public WarehouseContext(DbContextOptions options, Guid tenantId) : base(options)
     {
         _tenantId = tenantId;
-    }*/
+    }
     
     public virtual DbSet<WarehouseEntity> Warehouse { get; set; }
     public virtual DbSet<LocationEntity> Location { get; set; }

@@ -18,16 +18,14 @@ public class WarehouseController : ControllerBase
     private readonly IWarehouseService _warehouseService;
     private readonly IUserContextService _userContextService;
     private readonly IRetailService _retailService;
-    private readonly IFranchiseUserService _franchiseUserService;
 
     public WarehouseController(ILogger<WarehouseController> logger, IWarehouseService warehouseService, 
-        IUserContextService userContextService, IRetailService retailService, IFranchiseUserService franchiseUserService)
+        IUserContextService userContextService, IRetailService retailService)
     {
         _logger = logger;
         _warehouseService = warehouseService;
         _userContextService = userContextService;
         _retailService = retailService;
-        _franchiseUserService = franchiseUserService;
     }
     
     [HttpGet(Name = "GetWarehouses")]

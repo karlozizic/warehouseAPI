@@ -53,6 +53,8 @@ builder.Services.AddScoped<IItemService, ItemService>();
 builder.Services.AddScoped<IRetailService, RetailService>();
 builder.Services.AddScoped<IFranchiseUserRepository, FranchiseUserRepository>();
 builder.Services.AddScoped<IFranchiseUserService, FranchiseUserService>();
+builder.Services.AddScoped<IItemRequestRepository, ItemRequestRepository>();
+builder.Services.AddScoped<IItemRequestService, ItemRequestService>();
 
 //
 builder.Services.AddLogWriter(builder.Configuration);

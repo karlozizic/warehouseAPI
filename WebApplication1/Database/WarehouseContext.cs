@@ -19,7 +19,8 @@ public class WarehouseContext : DbContext
     public virtual DbSet<LocationEntity> Location { get; set; }
     public virtual DbSet<ItemEntity> Item { get; set; }
     public virtual DbSet<FranchiseUserEntity> FranchiseUser { get; set; }
-    /*public virtual DbSet<UserEntity> User { get; set; }*/
+    
+    public virtual DbSet<ItemRequestEntity> ItemRequest { get; set; }
 
     IConfigurationRoot _configuration = new ConfigurationBuilder()
         .SetBasePath(Directory.GetCurrentDirectory())

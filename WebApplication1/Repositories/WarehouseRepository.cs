@@ -93,10 +93,6 @@ public class WarehouseRepository : IWarehouseRepository, IDisposable
         {
             warehouseEntity.IsPayoutLockedForOtherCostCenter = true;
         }
-        if (warehouseUpdate.OperatorUser != null)
-        {
-            warehouseEntity.OperatorUser = warehouseUpdate.OperatorUser;
-        }
         // warehouse items update? 
         if (warehouseUpdate.Items != null)
         {
@@ -114,12 +110,6 @@ public class WarehouseRepository : IWarehouseRepository, IDisposable
             .Where(x => x.Id == warehouseId)
             .SelectMany(x => x.Items)
             .ToListAsync();
-    }
-    
-    public async Task<FranchiseUserEntity> GetOperator(Guid warehouseId)
-    {
-        WarehouseEntity? warehouse = await _warehouseContext.Warehouse.FindAsync(warehouseId);
-        return warehouse.OperatorUser;
     }
 
     public async Task InsertAllWarehouses(List<WarehouseEntity> warehouseEntities)

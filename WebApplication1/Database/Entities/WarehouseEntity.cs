@@ -19,7 +19,7 @@ public class WarehouseEntity
     public bool Deleted { get; set; }
     public string? DefaultLanguage { get; set; }
     public bool IsPayoutLockedForOtherCostCenter { get; set; }
-    public FranchiseUserEntity? OperatorUser { get; set; }
+    
     //promijeni List u IQueryable - kako bi se optimizirali upiti prema bazi podataka 
     public List<ItemEntity>? Items { get; set; }
     
@@ -38,7 +38,6 @@ public class WarehouseEntity
         this.Deleted = deleted;
         this.DefaultLanguage = defaultLanguage;
         this.IsPayoutLockedForOtherCostCenter = isPayoutLockedForOtherCostCenter;
-        this.OperatorUser = null;
         this.Items = null;
     }
     
@@ -54,7 +53,6 @@ public class WarehouseEntity
         this.Deleted = deleted;
         this.DefaultLanguage = defaultLanguage;
         this.IsPayoutLockedForOtherCostCenter = isPayoutLockedForOtherCostCenter;
-        this.OperatorUser = null;
         this.Items = null;
     }
 

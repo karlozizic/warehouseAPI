@@ -62,30 +62,7 @@ public class WarehouseService : IWarehouseService
         
         await _warehouseRepository.UpdateWarehouse(warehouseUpdateClass);
     }
-    
-    public async Task AssignOperator(Guid franchiseUserId, Guid warehouseId)
-    {
-        WarehouseEntity warehouse = await _warehouseRepository.GetWarehouseById(warehouseId);
-        if (warehouse == null)
-        {
-            throw new Exception("Warehouse does not exist");
-        }
-        
-        FranchiseUserEntity franchiseUserEntity = await _franchiseUserRepository.GetFranchiseUserById(franchiseUserId);
-        
-        if(franchiseUserEntity == null)
-        {
-            throw new Exception("Franchise user does not exist");
-        }
 
-        var warehouseUpdateClass = new WarehouseUpdateClass();
-        warehouseUpdateClass.Id = warehouseId;
-        warehouseUpdateClass.OperatorUser = franchiseUserEntity;
-        
-        await _warehouseRepository.UpdateWarehouse(warehouseUpdateClass);
-        
-    }
-    
     public async Task<List<ItemEntity>> GetWarehouseItems(Guid warehouseId, String? name)
     {
         if (!await _warehouseRepository.Exists(warehouseId))

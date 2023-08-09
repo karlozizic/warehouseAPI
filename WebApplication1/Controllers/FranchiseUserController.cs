@@ -42,4 +42,38 @@ public class FranchiseUserController : ControllerBase
             return BadRequest(e.Message);
         }
     }
+
+    [VerifyGrants("backoffice")]
+    [HttpGet(Name = "FetchFranchiseUser")]
+    [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    public async Task<IActionResult> FetchFranchiseUserById([FromQuery] Guid franchiseUserId)
+    {
+        try
+        { 
+            var franchiseUser = await _franchiseUserService.GetFranchiseUserById(franchiseUserId);
+            return Ok(franchiseUser);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
+    [VerifyGrants("backoffice")]
+    [HttpPost(Name="AssignOperator")]
+    [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    public async Task<IActionResult> AssignOperator([FromQuery] Guid franchiseUserId, [FromQuery] Guid warehouseId)
+    {
+        try
+        {
+            await _franchiseUserService.AssignToWarehouse(franchiseUserId, warehouseId);
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
 }

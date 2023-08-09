@@ -10,13 +10,15 @@ public class FranchiseUserEntity
     public Guid FranchiseId { get; set; }
     public string? Username { get; set; }
     public Guid TenantId { get; set; }
+    public Guid? WarehouseId { get; set; }
     
-    public FranchiseUserEntity(Guid id, Guid userId, Guid franchiseId, string? username, Guid tenantId)
+    public FranchiseUserEntity(Guid id, Guid userId, Guid franchiseId, string? username, Guid tenantId, Guid? warehouseId)
     {
         Id = id;
         UserId = userId;
         FranchiseId = franchiseId;
         Username = username;
         TenantId = tenantId;
+        WarehouseId = warehouseId;
     }
 }

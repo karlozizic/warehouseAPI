@@ -2,6 +2,7 @@
 using WebApplication1.Database;
 using WebApplication1.Database.Entities;
 using WebApplication1.Interfaces;
+using WebApplication1.Models;
 
 namespace WebApplication1.Repositories;
 
@@ -42,5 +43,26 @@ public class FranchiseUserRepository : IFranchiseUserRepository
         }
 
         return franchiseUser; 
+    }
+    
+    public async Task UpdateFranchiseUser(FranchiseUserUpdateClass franchiseUserUpdateClass, Guid franchiseUserId)
+    {
+        var franchiseUser = await _warehouseContext.FranchiseUser.FirstOrDefaultAsync(x => x.UserId == franchiseUserId);
+        
+        if (franchiseUser == null)
+        {
+            throw new Exception("Franchise user does not exist");
+        }
+
+        if (franchiseUserUpdateClass.WarehouseId != null)
+        {
+            franchiseUser.WarehouseId = franchiseUserUpdateClass.WarehouseId;
+        }
+        if (franchiseUserUpdateClass.Username != null)
+        {
+            franchiseUser.Username = franchiseUserUpdateClass.Username;
+        }
+        
+        await _warehouseContext.SaveChangesAsync(); 
     }
 }

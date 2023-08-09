@@ -111,22 +111,7 @@ public class WarehouseController : ControllerBase
         }
     }
     
-    [VerifyGrants("backoffice")]
-    [HttpPost(Name="AssignOperator")]
-    [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
-    [ProducesResponseType((int)HttpStatusCode.OK)]
-    public async Task<IActionResult> AssignOperator([FromQuery] Guid warehouseId, [FromQuery] Guid franchiseUserId)
-    {
-        try
-        {
-            await _warehouseService.AssignOperator(franchiseUserId, warehouseId);
-            return Ok();
-        }
-        catch (Exception e)
-        {
-            return BadRequest(e.Message);
-        }
-    }
+    
 
     [VerifyGrants("backoffice")]
     [HttpGet(Name = "GetWarehouseItems")]
@@ -155,7 +140,7 @@ public class WarehouseController : ControllerBase
         try
         {
             var warehouses = await _retailService.FetchWarehouses(_userContextService.UserContext.TenantId, name, city);
-            await _warehouseService.InsertWarehouses(warehouses);
+            await _warehouseService.InsertWarehouses(warehouses);   
             return Ok();
         }
         catch (Exception e)

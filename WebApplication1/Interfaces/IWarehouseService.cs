@@ -11,7 +11,6 @@ public interface IWarehouseService
     Task InsertWarehouse(WarehouseEntity warehouseEntity);
     Task DeleteWarehouse(Guid id);
     Task UpdateWarehouse(WarehouseUpdateClass warehouseEntity);
-    Task AssignOperator(Guid franchiseUserEntity, Guid warehouseId);
     
     Task<List<ItemEntity>> GetWarehouseItems(Guid warehouseId, String? name);
     

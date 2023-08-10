@@ -15,5 +15,6 @@ public class ItemEntity
     public String? Description { get; set; }
     public Guid TenantId { get; set; }
     public Boolean Deleted { get; set; }
+    public Guid WarehouseId { get; set; }
 
 }

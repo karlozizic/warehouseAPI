@@ -12,7 +12,6 @@ public class ItemRequestEntity
     public ItemRequestEnum? status { get; set; }
     public Guid? requestOperatorId { get; set; }
     public Guid? approvalOperatorId { get; set; }
-    
     public bool Deleted { get; set; }
 
     public ItemRequestEntity(Guid itemId, Guid warehouseId, ItemRequestEnum? status,

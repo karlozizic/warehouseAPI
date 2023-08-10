@@ -12,7 +12,9 @@ public interface IWarehouseService
     Task DeleteWarehouse(Guid id);
     Task UpdateWarehouse(WarehouseUpdateClass warehouseEntity);
     
+    /*
     Task<List<ItemEntity>> GetWarehouseItems(Guid warehouseId, String? name);
+    */
     
     Task InsertWarehouses(List<CostCenterDto> warehouses);
 

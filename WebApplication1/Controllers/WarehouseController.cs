@@ -108,10 +108,8 @@ public class WarehouseController : ControllerBase
             return BadRequest(e.Message);
         }
     }
-    
-    
 
-    [VerifyGrants("backoffice")]
+    /*[VerifyGrants("backoffice")]
     [HttpGet(Name = "GetWarehouseItems")]
     [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.OK)]
@@ -127,7 +125,7 @@ public class WarehouseController : ControllerBase
         {
             return BadRequest(e.Message);
         }
-    }
+    }*/
 
     [VerifyGrants("backoffice")]
     [HttpPost(Name = "FetchWarehouses")]

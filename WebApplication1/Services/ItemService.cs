@@ -21,5 +21,15 @@ public class ItemService : IItemService
 
         await _itemRepository.UpdateItem(warehouseItemEntity);
     }
+    
+    public async Task<ItemEntity> GetItemById(Guid id)
+    {
+        if (!await _itemRepository.ExistsItem(id))
+        {
+            throw new Exception("Item does not exist");
+        }
+        
+        return await _itemRepository.GetItemById(id);
+    }
 
 }

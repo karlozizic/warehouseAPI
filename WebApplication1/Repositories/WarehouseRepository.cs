@@ -93,24 +93,19 @@ public class WarehouseRepository : IWarehouseRepository, IDisposable
         {
             warehouseEntity.IsPayoutLockedForOtherCostCenter = true;
         }
-        // warehouse items update? 
-        if (warehouseUpdate.Items != null)
-        {
-            warehouseEntity.Items = warehouseUpdate.Items;
-        }
         
         await _warehouseContext.SaveChangesAsync();
 
     }
 
-    public async Task<List<ItemEntity>> GetWarehouseItems(Guid warehouseId)
+    /*public async Task<List<ItemEntity>> GetWarehouseItems(Guid warehouseId)
     {
         
         return await _warehouseContext.Warehouse
             .Where(x => x.Id == warehouseId)
             .SelectMany(x => x.Items)
             .ToListAsync();
-    }
+    }*/
 
     public async Task InsertAllWarehouses(List<WarehouseEntity> warehouseEntities)
     {

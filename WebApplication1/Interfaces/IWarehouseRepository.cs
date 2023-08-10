@@ -11,6 +11,8 @@ public interface IWarehouseRepository : IDisposable
     public Task InsertWarehouse(WarehouseEntity warehouseEntity);
     public Task DeleteWarehouse(Guid id);
     public Task UpdateWarehouse(WarehouseUpdateClass warehouseUpdateClass);
+    /*
     public Task<List<ItemEntity>> GetWarehouseItems(Guid warehouseId);
+    */
     public Task InsertAllWarehouses(List<WarehouseEntity> warehouseEntities);
 }

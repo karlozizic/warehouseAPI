@@ -63,7 +63,7 @@ public class WarehouseService : IWarehouseService
         await _warehouseRepository.UpdateWarehouse(warehouseUpdateClass);
     }
 
-    public async Task<List<ItemEntity>> GetWarehouseItems(Guid warehouseId, String? name)
+    /*public async Task<List<ItemEntity>> GetWarehouseItems(Guid warehouseId, String? name)
     {
         if (!await _warehouseRepository.Exists(warehouseId))
         {
@@ -79,7 +79,7 @@ public class WarehouseService : IWarehouseService
         }
 
         return items; 
-    }
+    }*/
     
     public async Task InsertWarehouses(List<CostCenterDto> warehouses)
     {

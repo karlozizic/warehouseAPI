@@ -19,10 +19,6 @@ public class WarehouseEntity
     public bool Deleted { get; set; }
     public string? DefaultLanguage { get; set; }
     public bool IsPayoutLockedForOtherCostCenter { get; set; }
-    
-    //promijeni List u IQueryable - kako bi se optimizirali upiti prema bazi podataka 
-    public List<ItemEntity>? Items { get; set; }
-    
     [Required]
     public Guid TenantId { get; set; }
 
@@ -38,7 +34,6 @@ public class WarehouseEntity
         this.Deleted = deleted;
         this.DefaultLanguage = defaultLanguage;
         this.IsPayoutLockedForOtherCostCenter = isPayoutLockedForOtherCostCenter;
-        this.Items = null;
     }
     
     public WarehouseEntity(string name, string phoneNumber, string code, bool deleted,
@@ -53,7 +48,6 @@ public class WarehouseEntity
         this.Deleted = deleted;
         this.DefaultLanguage = defaultLanguage;
         this.IsPayoutLockedForOtherCostCenter = isPayoutLockedForOtherCostCenter;
-        this.Items = null;
     }
 
     public WarehouseEntity()

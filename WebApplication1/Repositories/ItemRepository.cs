@@ -24,4 +24,21 @@ public class ItemRepository : IItemRepository
     {
         return await _warehouseContext.Item.AnyAsync(e => e.Id == id);
     }
+
+    public async Task<ItemEntity> GetItemById(Guid id)
+    {
+        return await _warehouseContext.Item.FirstOrDefaultAsync(e => e.Id == id);
+    }
+    
+    public async Task InsertItem(ItemEntity itemEntity)
+    {
+        _warehouseContext.Item.Add(itemEntity);
+        await _warehouseContext.SaveChangesAsync();
+    }
+
+    public async Task DeleteItem(Guid id)
+    {
+        _warehouseContext.Item.Remove(await _warehouseContext.Item.FirstOrDefaultAsync(e => e.Id == id));
+        await _warehouseContext.SaveChangesAsync();
+    }
 }

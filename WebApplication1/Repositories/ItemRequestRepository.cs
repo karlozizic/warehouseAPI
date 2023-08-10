@@ -41,6 +41,12 @@ public class ItemRequestRepository : IItemRequestRepository
         await _warehouseContext.SaveChangesAsync();
     }
     
+    public async Task UpdateItemRequest(ItemRequestEntity itemRequestEntity)
+    {
+        _warehouseContext.Entry(itemRequestEntity).State = EntityState.Modified;
+        await _warehouseContext.SaveChangesAsync();
+    }
+    
 }
 
 public interface IItemRequestRepository
@@ -50,4 +56,5 @@ public interface IItemRequestRepository
     public Task<bool> Exists(Guid id);
     public Task InsertItemRequest(ItemRequestEntity itemRequestEntity);
     public Task DeleteItemRequest(Guid id);
+    public Task UpdateItemRequest(ItemRequestEntity itemRequestEntity);
 }

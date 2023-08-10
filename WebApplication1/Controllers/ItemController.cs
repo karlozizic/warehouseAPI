@@ -37,5 +37,22 @@ public class ItemController : ControllerBase
             return BadRequest(e.Message);
         }
     }
+    
+    [VerifyGrants("backoffice")]
+    [HttpGet(Name = "GetItem")]
+    [ProducesResponseType(typeof(List<ItemEntity>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    public async Task<IActionResult> GetItem([FromQuery] Guid id)
+    {
+        try
+        {
+            var item = await _itemService.GetItemById(id);
+            return Ok(item);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
 
 }

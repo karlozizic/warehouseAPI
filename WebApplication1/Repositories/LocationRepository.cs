@@ -18,6 +18,13 @@ public class LocationRepository : ILocationRepository, IDisposable
     {
         return await _warehouseContext.Location.ToListAsync();
     }
+
+    public async Task<Guid> Add(LocationEntity locationEntity)
+    {
+        _warehouseContext.Location.Add(locationEntity);
+        await _warehouseContext.SaveChangesAsync();
+        return locationEntity.Id;
+    }
     
     // https://learn.microsoft.com/en-us/aspnet/mvc/overview/older-versions/getting-started-with-ef-5-using-mvc-4/implementing-the-repository-and-unit-of-work-patterns-in-an-asp-net-mvc-application
     // Implementacija IDisposable interface-a 

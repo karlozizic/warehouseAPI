@@ -13,7 +13,6 @@ public class ItemEntity
     public String Name { get; set; }
     [MaxLength(1000, ErrorMessage = "Description cannot be longer than 1000 characters.")]
     public String? Description { get; set; }
-    public Guid TenantId { get; set; }
     public Boolean Deleted { get; set; }
     public Guid WarehouseId { get; set; }
 

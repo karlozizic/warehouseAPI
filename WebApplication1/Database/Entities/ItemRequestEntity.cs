@@ -7,21 +7,25 @@ public class ItemRequestEntity
 {
     [Key]
     public Guid Id { get; set; }
-    public Guid itemId { get; set; }
-    public Guid warehouseId { get; set; }
-    public ItemRequestEnum? status { get; set; }
-    public Guid? requestOperatorId { get; set; }
-    public Guid? approvalOperatorId { get; set; }
+    public Guid ItemId { get; set; }
+    public String ItemName { get; set; }
+    public String? ItemDescription { get; set; }
+    public Guid? CurrentWarehouseId { get; set; }
+    public Guid RequestedWarehouseId { get; set; }
+    public ItemRequestEnum? Status { get; set; }
+    public Guid? RequestOperatorId { get; set; }
+    public Guid? ApprovalOperatorId { get; set; }
     public bool Deleted { get; set; }
 
-    public ItemRequestEntity(Guid itemId, Guid warehouseId, ItemRequestEnum? status,
-        Guid? requestOperatorId)
+    public ItemRequestEntity(Guid itemId, String itemName, String? itemDescription, Guid? currentWarehouseId,
+        Guid requestedWarehouseId, Guid? requestOperatorId)
     {
         this.Id = Guid.NewGuid();
-        this.itemId = itemId;
-        this.warehouseId = warehouseId;
-        this.status = status;
-        this.requestOperatorId = requestOperatorId;
+        this.ItemId = itemId;
+        this.ItemName = itemName;
+        this.ItemDescription = itemDescription;
+        this.CurrentWarehouseId = currentWarehouseId;
+        this.RequestOperatorId = requestOperatorId;
         this.Deleted = false;
     }
     

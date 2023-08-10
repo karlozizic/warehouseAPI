@@ -71,10 +71,10 @@ public class WarehouseRepository : IWarehouseRepository, IDisposable
         {
             warehouseEntity.Name = warehouseUpdate.Name;
         }
-        if(warehouseUpdate.Location != null)
+        /*if(warehouseUpdate.Location != null)
         {
             warehouseEntity.Location = warehouseUpdate.Location;
-        }
+        }*/
         if (!warehouseUpdate.PhoneNumber.IsNullOrEmpty())
         {
             warehouseEntity.PhoneNumber = warehouseUpdate.PhoneNumber;

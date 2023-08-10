@@ -12,7 +12,9 @@ public class WarehouseEntity
     [Required]
     [MaxLength(100, ErrorMessage = "Name cannot be longer than 100 characters.")]
     public string Name { get; set; }
-    /*[Required]*/
+    
+    [ForeignKey("Location")]
+    public Guid? LocationId { get; set; }
     public LocationEntity? Location { get; set; }
     public string? PhoneNumber { get; set; }
     public string? Code {get; set; }
@@ -22,36 +24,17 @@ public class WarehouseEntity
     [Required]
     public Guid TenantId { get; set; }
 
-    public WarehouseEntity(Guid id, string name, string? phoneNumber, string? code, bool deleted,
-        string? defaultLanguage, bool isPayoutLockedForOtherCostCenter)
-    {
-        this.Id = id;
-        this.Name = name;
-        //this.location = location;
-        this.Location = null; 
-        this.PhoneNumber = phoneNumber;
-        this.Code = code;
-        this.Deleted = deleted;
-        this.DefaultLanguage = defaultLanguage;
-        this.IsPayoutLockedForOtherCostCenter = isPayoutLockedForOtherCostCenter;
-    }
-    
-    public WarehouseEntity(string name, string phoneNumber, string code, bool deleted,
+    public WarehouseEntity(string name, Guid? locationId, string phoneNumber, string code, bool deleted,
         string defaultLanguage, bool isPayoutLockedForOtherCostCenter)
     {
         this.Id = Guid.NewGuid();
         this.Name = name;
-        //this.location = location;
-        this.Location = null; 
+        this.LocationId = locationId;
         this.PhoneNumber = phoneNumber;
         this.Code = code;
         this.Deleted = deleted;
         this.DefaultLanguage = defaultLanguage;
         this.IsPayoutLockedForOtherCostCenter = isPayoutLockedForOtherCostCenter;
-    }
-
-    public WarehouseEntity()
-    {
     }
 
 }

@@ -38,8 +38,9 @@ public class ItemRequestService : IItemRequestService
 
     public async Task CreateItemRequest(ItemRequestDto itemRequestDto, Guid operatorId)
     {
-        ItemRequestEntity itemRequestEntity = new ItemRequestEntity(itemRequestDto.itemId, itemRequestDto.warehouseId, 
-            ItemRequestEnum.Requested, operatorId);
+        ItemRequestEntity itemRequestEntity = new ItemRequestEntity(itemRequestDto.ItemId, itemRequestDto.ItemName,
+            itemRequestDto.ItemDescription, itemRequestDto.CurrentWarehouseId, itemRequestDto.RequestedWarehouseId,
+            itemRequestDto.RequestOperatorId);
 
         await _itemRequestRepository.InsertItemRequest(itemRequestEntity); 
     }
@@ -53,7 +54,7 @@ public class ItemRequestService : IItemRequestService
             throw new Exception("Item request does not exist");
         }
         
-        ItemEntity itemEntity = await _itemRepository.GetItemById(itemRequestEntity.itemId);
+        ItemEntity itemEntity = await _itemRepository.GetItemById(itemRequestEntity.ItemId);
         
         if (itemEntity == null)
         {
@@ -73,7 +74,7 @@ public class ItemRequestService : IItemRequestService
             throw new Exception("Francise user does not have access to this warehouse");
         }
         
-        itemRequestEntity.status = itemRequestStatus; 
+        itemRequestEntity.Status = itemRequestStatus; 
         await _itemRequestRepository.UpdateItemRequest(itemRequestEntity);
 
         if (itemRequestStatus == ItemRequestEnum.Approved)

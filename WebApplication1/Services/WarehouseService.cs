@@ -8,12 +8,13 @@ namespace WebApplication1.Services;
 public class WarehouseService : IWarehouseService
 {
     private readonly IWarehouseRepository _warehouseRepository;
-    private readonly IFranchiseUserRepository _franchiseUserRepository; 
+    private readonly ILocationRepository _locationRepository;
     
-    public WarehouseService(IWarehouseRepository warehouseRepository, IFranchiseUserRepository franchiseUserRepository)
+    public WarehouseService(IWarehouseRepository warehouseRepository, IFranchiseUserRepository franchiseUserRepository,
+        ILocationRepository locationRepository)
     {
         _warehouseRepository = warehouseRepository; 
-        _franchiseUserRepository = franchiseUserRepository;
+        _locationRepository = locationRepository;
     }
     
     public async Task<List<WarehouseEntity>> GetWarehouses()
@@ -87,7 +88,10 @@ public class WarehouseService : IWarehouseService
 
         foreach (var warehouse in warehouses)
         {
-            warehouseEntities.Add(new WarehouseEntity(warehouse.Id, warehouse.Name, warehouse.PhoneNumber,
+            // potrebna je efikasnija implementacija - zbog ovog duze traje request
+            Guid locationId = await _locationRepository.Add(new LocationEntity(warehouse.Address, warehouse.City, warehouse.PostalCode));
+            
+            warehouseEntities.Add(new WarehouseEntity(warehouse.Name, locationId, warehouse.PhoneNumber,
                 warehouse.Code, warehouse.Deleted, warehouse.DefaultLanguage, warehouse.IsPayoutLockedForOtherCostCenter));
         }
         

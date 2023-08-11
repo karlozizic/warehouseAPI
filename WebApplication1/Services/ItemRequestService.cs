@@ -72,8 +72,13 @@ public class ItemRequestService : IItemRequestService
             {
                 throw new Exception("Item does not exist");
             }
+
+            if (itemEntity.reserved == true)
+            {
+                throw new Exception("Item is reserved by warehouse operator - can't be moved");
+            }
         }
-        
+
         FranchiseUserEntity franchiseUserEntity = await _franchiseUserRepository.GetFranchiseUserById(tenantId, operatorId);
         
         if (franchiseUserEntity == null)

@@ -72,4 +72,20 @@ public class ItemController : ControllerBase
         }
     }
 
+
+    [HttpPut(Name = "ReserveWarehouseItem")]
+    [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    public async Task<IActionResult> ReserveWarehouseItem([FromQuery] Guid itemId)
+    {
+        try
+        {
+            await _itemService.ReserveItem(_userContextService.UserContext.TenantId, _userContextService.UserContext.UserId, itemId);
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
 }

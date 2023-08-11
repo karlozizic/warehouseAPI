@@ -4,24 +4,36 @@ using WebApplication1.Database;
 using WebApplication1.Database.Entities;
 using WebApplication1.Interfaces;
 using WebApplication1.Models;
+using WebApplication1.Services;
+using X.Auth.Interface.Services;
 
 namespace WebApplication1.Repositories;
 
 public class WarehouseRepository : IWarehouseRepository, IDisposable
 {
     private WarehouseContext _warehouseContext;
+    private readonly IContextService _contextService;
+    private readonly IUserContextService _userContextService;
     
-    public WarehouseRepository(WarehouseContext warehouseContext)
+    public WarehouseRepository(WarehouseContext warehouseContext, IContextService contextService, IUserContextService userContextService)
     {
         _warehouseContext = warehouseContext;
         //ContextService
+        _contextService = contextService;
+        //UserContextService
+        _userContextService = userContextService;
     }
     
     public async Task<List<WarehouseEntity>> GetWarehouses()
     {
         //await using (var context = contextService.CreateDbContext){ <tu se izvodi kod> }  
         //ToListAsync vraca Task<List<Warehouse>> - nije potrebno Task.FromResult(...)
-        return await _warehouseContext.Warehouse.ToListAsync(); 
+        /*return await _warehouseContext.Warehouse.ToListAsync(); */
+        
+        using (var warehouseContext = _contextService.CreateDbContext(_userContextService.UserContext.TenantId))
+        {
+            return await warehouseContext.Warehouse.ToListAsync();
+        }
     }
 
     // ** Provjeri jos! - fetch po Guid id 

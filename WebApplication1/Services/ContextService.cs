@@ -3,9 +3,9 @@ using WebApplication1.Database;
 
 namespace WebApplication1.Services;
 
-public class ContextService
+public class ContextService : IContextService
 {
-    /*private readonly string? _connectionString; 
+    private readonly string? _connectionString; 
     
     public ContextService(IConfiguration configuration)
     {
@@ -17,5 +17,11 @@ public class ContextService
         var builder = new DbContextOptionsBuilder<WarehouseContext>();
         builder.UseNpgsql(_connectionString);
         return new WarehouseContext(builder.Options, tenantId);
-    }*/
+    }
+}
+
+public interface IContextService
+{
+    WarehouseContext CreateDbContext(Guid tenantId);
+
 }

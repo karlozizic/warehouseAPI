@@ -7,13 +7,13 @@ public class WarehouseContext : DbContext
 {
     private readonly Guid _tenantId;
 
-    /*public WarehouseContext()
+    public WarehouseContext()
     {
     }
     public WarehouseContext(DbContextOptions options, Guid tenantId) : base(options)
     {
         _tenantId = tenantId;
-    }*/
+    }
     
     public virtual DbSet<WarehouseEntity> Warehouse { get; set; }
     public virtual DbSet<LocationEntity> Location { get; set; }
@@ -53,14 +53,7 @@ public class WarehouseContext : DbContext
             entity.HasKey(t => new { t.Id }); 
             entity.HasQueryFilter(t => t.TenantId == _tenantId);
         });
-        
-        modelBuilder.Entity<UserEntity>(entity =>
-        {
-            entity.HasKey(t => new { t.Id }); 
-            entity.HasQueryFilter(t => t.TenantId == _tenantId);
-        });
-        
-        base.OnModelCreating(modelBuilder);
+    
     }*/
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

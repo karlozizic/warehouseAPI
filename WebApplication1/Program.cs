@@ -38,9 +38,11 @@ builder.WebHost.UseKestrel(options =>
 });
 //
 // DbContext
+/*
 builder.Services.AddDbContext<WarehouseContext>();
-/*builder.Services.AddDbContext<WarehouseContext>(
-    options => options.UseNpgsql(builder.Configuration.GetConnectionString("WarehouseAppConnection")));*/
+*/
+builder.Services.AddDbContext<WarehouseContext>(
+    options => options.UseNpgsql(builder.Configuration.GetConnectionString("WarehouseAppConnection")));
 //
 
 // Potrebno je autowireati Interface i realizaciju Interfacea
@@ -55,6 +57,8 @@ builder.Services.AddScoped<IFranchiseUserRepository, FranchiseUserRepository>();
 builder.Services.AddScoped<IFranchiseUserService, FranchiseUserService>();
 builder.Services.AddScoped<IItemRequestRepository, ItemRequestRepository>();
 builder.Services.AddScoped<IItemRequestService, ItemRequestService>();
+
+builder.Services.AddScoped<IContextService, ContextService>();
 
 //
 builder.Services.AddLogWriter(builder.Configuration);

@@ -17,9 +17,9 @@ public class WarehouseService : IWarehouseService
         _locationRepository = locationRepository;
     }
     
-    public async Task<List<WarehouseEntity>> GetWarehouses()
+    public async Task<List<WarehouseEntity>> GetWarehouses(Guid tenantId)
     {
-        return await _warehouseRepository.GetWarehouses();
+        return await _warehouseRepository.GetWarehouses(tenantId);
     }
     
     public async Task<WarehouseEntity> GetWarehouseById(Guid id)

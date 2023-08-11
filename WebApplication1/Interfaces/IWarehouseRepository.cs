@@ -3,9 +3,9 @@ using WebApplication1.Models;
 
 namespace WebApplication1.Interfaces;
 
-public interface IWarehouseRepository : IDisposable
+public interface IWarehouseRepository
 {
-    public Task<List<WarehouseEntity>> GetWarehouses();
+    public Task<List<WarehouseEntity>> GetWarehouses(Guid tenantId);
     public Task<WarehouseEntity?> GetWarehouseById(Guid id);
     public Task<Boolean> Exists(Guid id); 
     public Task InsertWarehouse(WarehouseEntity warehouseEntity);

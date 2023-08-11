@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using WebApplication1.Database;
 using WebApplication1.Database.Entities;
 using WebApplication1.Interfaces;
 using WebApplication1.Models;
@@ -9,28 +8,25 @@ using X.Auth.Interface.Services;
 
 namespace WebApplication1.Repositories;
 
-public class WarehouseRepository : IWarehouseRepository, IDisposable
+public class WarehouseRepository : IWarehouseRepository
 {
-    private WarehouseContext _warehouseContext;
     private readonly IContextService _contextService;
     private readonly IUserContextService _userContextService;
     
-    public WarehouseRepository(WarehouseContext warehouseContext, IContextService contextService, IUserContextService userContextService)
+    public WarehouseRepository(IContextService contextService, IUserContextService userContextService)
     {
-        _warehouseContext = warehouseContext;
         //ContextService
         _contextService = contextService;
-        //UserContextService
         _userContextService = userContextService;
     }
     
-    public async Task<List<WarehouseEntity>> GetWarehouses()
+    public async Task<List<WarehouseEntity>> GetWarehouses(Guid tenantId)
     {
         //await using (var context = contextService.CreateDbContext){ <tu se izvodi kod> }  
         //ToListAsync vraca Task<List<Warehouse>> - nije potrebno Task.FromResult(...)
         /*return await _warehouseContext.Warehouse.ToListAsync(); */
         
-        using (var warehouseContext = _contextService.CreateDbContext(_userContextService.UserContext.TenantId))
+        using (var warehouseContext = _contextService.CreateDbContext(tenantId))
         {
             return await warehouseContext.Warehouse.ToListAsync();
         }
@@ -41,30 +37,42 @@ public class WarehouseRepository : IWarehouseRepository, IDisposable
     {
         // Find i FirstOrDefault - oboje imaju slozenost O(n) 
         // Find 
-        return await _warehouseContext.Warehouse.FindAsync(id); 
+        using (var warehouseContext = _contextService.CreateDbContext(_userContextService.UserContext.TenantId))
+        {
+            return await warehouseContext.Warehouse.FindAsync(id);
+        }
         // FirstOrDefault iterira sa foreach loopom kroz sve elemente kolekcije i vraca prvi element koji zadovoljava uvjet
         // return await _warehouseContext.Warehouses.FirstOrDefaultAsync(x => x.id == id);
     }
 
     public async Task<Boolean> Exists(Guid id)
     {
-        return await _warehouseContext.Warehouse.AnyAsync(x => x.Id == id);
+        using (var warehouseContext = _contextService.CreateDbContext(_userContextService.UserContext.TenantId))
+        {
+            return await warehouseContext.Warehouse.AnyAsync(x => x.Id == id);
+        }
     }
     
     // ** Sljedeci blok metoda vraca void, ali asinkrone su pa se vraca Task 
     public async Task InsertWarehouse(WarehouseEntity warehouseEntity)
     {
-        await Task.FromResult(_warehouseContext.Warehouse.Add(warehouseEntity)); 
-        await _warehouseContext.SaveChangesAsync();
+        using (var warehouseContext = _contextService.CreateDbContext(_userContextService.UserContext.TenantId))
+        {
+            await Task.FromResult(warehouseContext.Warehouse.Add(warehouseEntity));
+            await warehouseContext.SaveChangesAsync();
+        }
     }
     
     public async Task DeleteWarehouse(Guid id)
     {
-        WarehouseEntity? warehouse = await _warehouseContext.Warehouse.FindAsync(id);
-        // Radimo soft delete - ne brisemo iz baze nego samo postavljamo deleted na true
-        //_warehouseContext.Warehouses.Remove(warehouse);
-        warehouse.Deleted = true;
-        await _warehouseContext.SaveChangesAsync();
+        using (var warehouseContext = _contextService.CreateDbContext(_userContextService.UserContext.TenantId))
+        {
+            WarehouseEntity? warehouse = await warehouseContext.Warehouse.FindAsync(id);
+            // Radimo soft delete - ne brisemo iz baze nego samo postavljamo deleted na true
+            //_warehouseContext.Warehouses.Remove(warehouse);
+            warehouse.Deleted = true;
+            await warehouseContext.SaveChangesAsync();
+        }
     }
 
     public async Task UpdateWarehouse(WarehouseUpdateClass warehouseUpdate)
@@ -75,39 +83,44 @@ public class WarehouseRepository : IWarehouseRepository, IDisposable
         await _warehouseContext.SaveChangesAsync();*/
         
         //provjera je li warehouse deleted 
-        
-        Guid id = warehouseUpdate.Id; 
-        WarehouseEntity? warehouseEntity = await _warehouseContext.Warehouse.SingleAsync(x => x.Id == id);
+        using (var warehouseContext = _contextService.CreateDbContext(_userContextService.UserContext.TenantId))
+        {
+            Guid id = warehouseUpdate.Id;
+            WarehouseEntity? warehouseEntity = await warehouseContext.Warehouse.SingleAsync(x => x.Id == id);
 
-        if (!warehouseUpdate.Name.IsNullOrEmpty())
-        {
-            warehouseEntity.Name = warehouseUpdate.Name;
-        }
-        /*if(warehouseUpdate.Location != null)
-        {
-            warehouseEntity.Location = warehouseUpdate.Location;
-        }*/
-        if (!warehouseUpdate.PhoneNumber.IsNullOrEmpty())
-        {
-            warehouseEntity.PhoneNumber = warehouseUpdate.PhoneNumber;
-        }
-        if (!warehouseUpdate.Code.IsNullOrEmpty())
-        {
-          warehouseEntity.Code = warehouseUpdate.Code;  
-        }
-        // nije moguce deleteati preko update requesta 
-        if (!warehouseUpdate.DefaultLanguage.IsNullOrEmpty())
-        {
-            warehouseEntity.DefaultLanguage = warehouseUpdate.DefaultLanguage;
-        }
-        // sto ako je warehouseUpdate.IsPayoutLockedForOtherCostCenter == null? 
-        if (warehouseUpdate.IsPayoutLockedForOtherCostCenter)
-        {
-            warehouseEntity.IsPayoutLockedForOtherCostCenter = true;
-        }
-        
-        await _warehouseContext.SaveChangesAsync();
+            if (!warehouseUpdate.Name.IsNullOrEmpty())
+            {
+                warehouseEntity.Name = warehouseUpdate.Name;
+            }
 
+            /*if(warehouseUpdate.Location != null)
+            {
+                warehouseEntity.Location = warehouseUpdate.Location;
+            }*/
+            if (!warehouseUpdate.PhoneNumber.IsNullOrEmpty())
+            {
+                warehouseEntity.PhoneNumber = warehouseUpdate.PhoneNumber;
+            }
+
+            if (!warehouseUpdate.Code.IsNullOrEmpty())
+            {
+                warehouseEntity.Code = warehouseUpdate.Code;
+            }
+
+            // nije moguce deleteati preko update requesta 
+            if (!warehouseUpdate.DefaultLanguage.IsNullOrEmpty())
+            {
+                warehouseEntity.DefaultLanguage = warehouseUpdate.DefaultLanguage;
+            }
+
+            // sto ako je warehouseUpdate.IsPayoutLockedForOtherCostCenter == null? 
+            if (warehouseUpdate.IsPayoutLockedForOtherCostCenter)
+            {
+                warehouseEntity.IsPayoutLockedForOtherCostCenter = true;
+            }
+
+            await warehouseContext.SaveChangesAsync();
+        }
     }
 
     /*public async Task<List<ItemEntity>> GetWarehouseItems(Guid warehouseId)
@@ -121,13 +134,16 @@ public class WarehouseRepository : IWarehouseRepository, IDisposable
 
     public async Task InsertAllWarehouses(List<WarehouseEntity> warehouseEntities)
     {
-        await _warehouseContext.Warehouse.AddRangeAsync(warehouseEntities);
-        await _warehouseContext.SaveChangesAsync(); 
+        using (var warehouseContext = _contextService.CreateDbContext(_userContextService.UserContext.TenantId))
+        {
+            await warehouseContext.Warehouse.AddRangeAsync(warehouseEntities);
+            await warehouseContext.SaveChangesAsync();
+        }
     }
 
     // https://learn.microsoft.com/en-us/aspnet/mvc/overview/older-versions/getting-started-with-ef-5-using-mvc-4/implementing-the-repository-and-unit-of-work-patterns-in-an-asp-net-mvc-application
     // Implementacija IDisposable interface-a 
-    private bool disposed = false;
+    /*private bool disposed = false;
     protected virtual void Dispose(bool disposing)
     {
         if (!this.disposed)
@@ -144,6 +160,5 @@ public class WarehouseRepository : IWarehouseRepository, IDisposable
     {
         Dispose(true);
         GC.SuppressFinalize(this);
-    }
-    
+    }*/
 }

@@ -6,7 +6,7 @@ namespace WebApplication1.Interfaces;
 
 public interface IWarehouseService
 {
-    Task<List<WarehouseEntity>> GetWarehouses();
+    Task<List<WarehouseEntity>> GetWarehouses(Guid userContextTenantId);
     Task<WarehouseEntity> GetWarehouseById(Guid id);
     Task InsertWarehouse(WarehouseEntity warehouseEntity);
     Task DeleteWarehouse(Guid id);

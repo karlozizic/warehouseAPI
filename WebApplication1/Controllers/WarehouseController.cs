@@ -28,6 +28,7 @@ public class WarehouseController : ControllerBase
         _retailService = retailService;
     }
     
+    [VerifyGrants("backoffice")]
     [HttpGet(Name = "GetWarehouses")]
     [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.OK)]
@@ -35,7 +36,7 @@ public class WarehouseController : ControllerBase
     {
         try
         {
-            var warehouses =  await _warehouseService.GetWarehouses();
+            var warehouses =  await _warehouseService.GetWarehouses(_userContextService.UserContext.TenantId);
             return Ok(warehouses);
         }
         catch (Exception e)

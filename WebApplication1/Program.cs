@@ -2,6 +2,7 @@ using System.Net;
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1.Database;
+using WebApplication1.Hubs;
 using WebApplication1.Interfaces;
 using WebApplication1.Repositories;
 using WebApplication1.Services;
@@ -18,7 +19,8 @@ var port = bindingConfig.GetValue<int?>("port") ?? FreePorts.Find();
 // sljedeci kod se inace ne konfigurira unutar Program.cs
 builder.Services.AddCors();
 //
-builder.Services.AddOptions(); 
+builder.Services.AddOptions();
+builder.Services.AddSignalR();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddMemoryCache();
@@ -82,5 +84,6 @@ app.UseRouting();
 app.UseRefreshAuthMiddleware();
 app.UseAuthorization();
 app.MapControllers();
+app.MapHub<NotificationHub>("/hub");
 
 app.Run();

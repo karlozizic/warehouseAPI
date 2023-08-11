@@ -1,6 +1,8 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using WebApplication1.Database.Entities;
+using WebApplication1.Hubs;
 using WebApplication1.Interfaces;
 using WebApplication1.Models;
 using WebApplication1.Services;
@@ -18,14 +20,16 @@ public class WarehouseController : ControllerBase
     private readonly IWarehouseService _warehouseService;
     private readonly IUserContextService _userContextService;
     private readonly IRetailService _retailService;
+    private readonly IHubContext<NotificationHub> _hubContext;
 
     public WarehouseController(ILogger<WarehouseController> logger, IWarehouseService warehouseService, 
-        IUserContextService userContextService, IRetailService retailService)
+        IUserContextService userContextService, IRetailService retailService, IHubContext<NotificationHub> hubContext)
     {
         _logger = logger;
         _warehouseService = warehouseService;
         _userContextService = userContextService;
         _retailService = retailService;
+        _hubContext = hubContext;
     }
     
     [HttpGet(Name = "GetWarehouses")]
@@ -36,6 +40,7 @@ public class WarehouseController : ControllerBase
         try
         {
             var warehouses =  await _warehouseService.GetWarehouses(_userContextService.UserContext.TenantId);
+            await _hubContext.Clients.All.SendAsync("ReceiveNotification", "GetWarehouses");
             return Ok(warehouses);
         }
         catch (Exception e)

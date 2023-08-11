@@ -28,7 +28,7 @@ public class ItemRepository : IItemRepository
         using (var warehouseContext = _contextService.CreateDbContext(tenantId))
         {
             return await warehouseContext.Item
-                .Where(x => x.Id == warehouseId)
+                .Where(x => x.WarehouseId == warehouseId)
                 .ToListAsync();
         }
         

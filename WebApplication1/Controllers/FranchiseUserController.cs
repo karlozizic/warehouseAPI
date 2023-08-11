@@ -26,7 +26,7 @@ public class FranchiseUserController : ControllerBase
     }
     
     [VerifyGrants("backoffice")]
-    [HttpPost(Name = "FetchFranchiseUsers")]
+    [HttpGet(Name = "FetchFranchiseUsers")]
     [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     public async Task<IActionResult> FetchFranchiseUsers()

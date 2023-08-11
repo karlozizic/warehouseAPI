@@ -43,7 +43,7 @@ public class ItemRequestService : IItemRequestService
             itemRequestDto.ItemDescription, operatorId, itemRequestDto.CurrentWarehouseId, itemRequestDto.RequestedWarehouseId);
         
         // item nije trenutno u drugom warehouseu
-        if (itemRequestDto.CurrentWarehouseId != null)
+        if (itemRequestDto.CurrentWarehouseId == null)
         {
             itemRequestEntity.Status = ItemRequestEnum.ApprovedForLeaving;
         }

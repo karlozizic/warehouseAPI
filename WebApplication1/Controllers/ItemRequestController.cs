@@ -13,13 +13,11 @@ namespace WebApplication1.Controllers;
 [Route("api/public/[controller]/[action]")]
 public class ItemRequestController : ControllerBase
 {
-    private readonly ILogger<ItemRequestController> _logger;
     private readonly IItemRequestService _itemRequestService;
     private readonly IUserContextService _userContextService;
     
-    public ItemRequestController(ILogger<ItemRequestController> logger, IItemRequestService itemRequestService, IUserContextService userContextService)
+    public ItemRequestController(IItemRequestService itemRequestService, IUserContextService userContextService)
     {
-        _logger = logger;
         _itemRequestService = itemRequestService;
         _userContextService = userContextService;
     }
@@ -31,7 +29,7 @@ public class ItemRequestController : ControllerBase
     {
         try
         {
-            var itemRequests =  await _itemRequestService.GetItemRequests();
+            var itemRequests =  await _itemRequestService.GetItemRequests(_userContextService.UserContext.TenantId);
             return Ok(itemRequests);
         }
         catch (Exception e)
@@ -47,7 +45,7 @@ public class ItemRequestController : ControllerBase
     {
         try
         { 
-            var itemRequest = await _itemRequestService.GetItemRequestById(id);
+            var itemRequest = await _itemRequestService.GetItemRequestById(_userContextService.UserContext.TenantId, id);
             return Ok(itemRequest);
         }
         catch (Exception e)
@@ -66,7 +64,7 @@ public class ItemRequestController : ControllerBase
         {   
             //operatorId se saznaje iz _userContextService
             Guid operatorId = _userContextService.UserContext.UserId; 
-            await _itemRequestService.CreateItemRequest(itemRequest, operatorId);
+            await _itemRequestService.CreateItemRequest(_userContextService.UserContext.TenantId, itemRequest, operatorId);
             return Ok();
         }
         catch (Exception e)
@@ -85,7 +83,7 @@ public class ItemRequestController : ControllerBase
         {   
             Guid operatorId = _userContextService.UserContext.UserId;
             ItemRequestEnum status = (ItemRequestEnum) Enum.Parse(typeof(ItemRequestEnum), itemStatus);
-            await _itemRequestService.UpdateItemRequest(itemRequestId, status, operatorId);
+            await _itemRequestService.UpdateItemRequest(_userContextService.UserContext.TenantId, itemRequestId, status, operatorId);
             return Ok();
         }
         catch (Exception e)
@@ -102,7 +100,7 @@ public class ItemRequestController : ControllerBase
     {
         try
         {   
-            await _itemRequestService.DeleteItemRequest(itemRequestId);
+            await _itemRequestService.DeleteItemRequest(_userContextService.UserContext.TenantId, itemRequestId);
             return Ok();
         }
         catch (Exception e)

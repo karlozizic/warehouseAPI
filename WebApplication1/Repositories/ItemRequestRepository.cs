@@ -1,60 +1,79 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WebApplication1.Database;
 using WebApplication1.Database.Entities;
+using WebApplication1.Services;
 
 namespace WebApplication1.Repositories;
 
 public class ItemRequestRepository : IItemRequestRepository
 {
-    private WarehouseContext _warehouseContext;
+    private readonly IContextService _contextService;
     
-    public ItemRequestRepository(WarehouseContext warehouseContext)
+    public ItemRequestRepository(IContextService contextService)
     {
-        _warehouseContext = warehouseContext;
+        _contextService = contextService;
     }
     
-    public async Task<List<ItemRequestEntity>> GetItemRequests()
+    public async Task<List<ItemRequestEntity>> GetItemRequests(Guid tenantId)
     {
-        return await _warehouseContext.ItemRequest.ToListAsync(); 
+        using (var warehouseContext = _contextService.CreateDbContext(tenantId))
+        {
+            return await warehouseContext.ItemRequest.ToListAsync(); 
+        }
     }
     
-    public async Task<ItemRequestEntity?> GetItemRequestById(Guid id)
+    public async Task<ItemRequestEntity?> GetItemRequestById(Guid tenantId, Guid id)
     {
-        return await _warehouseContext.ItemRequest.FindAsync(id); 
+        using (var warehouseContext = _contextService.CreateDbContext(tenantId))
+        {
+            return await warehouseContext.ItemRequest.FindAsync(id); 
+        }
     }
 
-    public async Task<bool> Exists(Guid id)
+    public async Task<bool> Exists(Guid tenantId, Guid id)
     {
-        return await _warehouseContext.ItemRequest.AnyAsync(e => e.Id == id);
+        using (var warehouseContext = _contextService.CreateDbContext(tenantId))
+        {
+            return await warehouseContext.ItemRequest.AnyAsync(e => e.Id == id);
+        }
+    }
+
+    public async Task InsertItemRequest(Guid tenantId, ItemRequestEntity itemRequestEntity)
+    {
+        using (var warehouseContext = _contextService.CreateDbContext(tenantId))
+        {
+            await Task.FromResult(warehouseContext.ItemRequest.Add(itemRequestEntity));
+            await warehouseContext.SaveChangesAsync();
+        }
+    }
+
+    public async Task DeleteItemRequest(Guid tenantId, Guid id)
+    {
+        using (var warehouseContext = _contextService.CreateDbContext(tenantId))
+        {
+            ItemRequestEntity? itemRequest = await warehouseContext.ItemRequest.FindAsync(id);
+            itemRequest.Deleted = true;
+            await warehouseContext.SaveChangesAsync();
+        }
     }
     
-    public async Task InsertItemRequest(ItemRequestEntity itemRequestEntity)
+    public async Task UpdateItemRequest(Guid tenantId, ItemRequestEntity itemRequestEntity)
     {
-        await Task.FromResult(_warehouseContext.ItemRequest.Add(itemRequestEntity)); 
-        await _warehouseContext.SaveChangesAsync();
-    }
-    
-    public async Task DeleteItemRequest(Guid id)
-    {
-        ItemRequestEntity? itemRequest = await _warehouseContext.ItemRequest.FindAsync(id);
-        itemRequest.Deleted = true;
-        await _warehouseContext.SaveChangesAsync();
-    }
-    
-    public async Task UpdateItemRequest(ItemRequestEntity itemRequestEntity)
-    {
-        _warehouseContext.Entry(itemRequestEntity).State = EntityState.Modified;
-        await _warehouseContext.SaveChangesAsync();
+        using (var warehouseContext = _contextService.CreateDbContext(tenantId))
+        {
+            warehouseContext.Entry(itemRequestEntity).State = EntityState.Modified;
+            await warehouseContext.SaveChangesAsync();
+        }
     }
     
 }
 
 public interface IItemRequestRepository
 {
-    public Task<List<ItemRequestEntity>> GetItemRequests();
-    public Task<ItemRequestEntity?> GetItemRequestById(Guid id);
-    public Task<bool> Exists(Guid id);
-    public Task InsertItemRequest(ItemRequestEntity itemRequestEntity);
-    public Task DeleteItemRequest(Guid id);
-    public Task UpdateItemRequest(ItemRequestEntity itemRequestEntity);
+    public Task<List<ItemRequestEntity>> GetItemRequests(Guid tenantId);
+    public Task<ItemRequestEntity?> GetItemRequestById(Guid tenantId, Guid id);
+    public Task<bool> Exists(Guid tenantId, Guid id);
+    public Task InsertItemRequest(Guid tenantId, ItemRequestEntity itemRequestEntity);
+    public Task DeleteItemRequest(Guid tenantId, Guid id);
+    public Task UpdateItemRequest(Guid tenantId, ItemRequestEntity itemRequestEntity);
 }

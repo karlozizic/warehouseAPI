@@ -22,22 +22,22 @@ public class ItemRequestService : IItemRequestService
         _franchiseUserRepository = franchiseUserRepository;
     }
     
-    public async Task<List<ItemRequestEntity>> GetItemRequests()
+    public async Task<List<ItemRequestEntity>> GetItemRequests(Guid tenantId)
     {
-        return await _itemRequestRepository.GetItemRequests();
+        return await _itemRequestRepository.GetItemRequests(tenantId);
     }
     
-    public async Task<ItemRequestEntity?> GetItemRequestById(Guid id)
+    public async Task<ItemRequestEntity?> GetItemRequestById(Guid tenantId, Guid id)
     {
-        if (!await _itemRequestRepository.Exists(id))
+        if (!await _itemRequestRepository.Exists(tenantId, id))
         {
             throw new Exception("Item request does not exist");
         }
         
-        return await _itemRequestRepository.GetItemRequestById(id);
+        return await _itemRequestRepository.GetItemRequestById(tenantId, id);
     }
 
-    public async Task CreateItemRequest(ItemRequestDto itemRequestDto, Guid operatorId)
+    public async Task CreateItemRequest(Guid tenantId, ItemRequestDto itemRequestDto, Guid operatorId)
     {
         ItemRequestEntity itemRequestEntity = new ItemRequestEntity(itemRequestDto.ItemId, itemRequestDto.ItemName,
             itemRequestDto.ItemDescription, operatorId, itemRequestDto.CurrentWarehouseId, itemRequestDto.RequestedWarehouseId);
@@ -52,12 +52,12 @@ public class ItemRequestService : IItemRequestService
             itemRequestEntity.Status = ItemRequestEnum.Requested;
         }
 
-        await _itemRequestRepository.InsertItemRequest(itemRequestEntity); 
+        await _itemRequestRepository.InsertItemRequest(tenantId, itemRequestEntity); 
     }
 
-    public async Task UpdateItemRequest(Guid itemRequestId, ItemRequestEnum itemRequestStatus, Guid operatorId)
+    public async Task UpdateItemRequest(Guid tenantId, Guid itemRequestId, ItemRequestEnum itemRequestStatus, Guid operatorId)
     {
-        ItemRequestEntity itemRequestEntity = await _itemRequestRepository.GetItemRequestById(itemRequestId);
+        ItemRequestEntity itemRequestEntity = await _itemRequestRepository.GetItemRequestById(tenantId, itemRequestId);
         
         if (itemRequestEntity == null)
         {
@@ -66,7 +66,7 @@ public class ItemRequestService : IItemRequestService
         
         if (itemRequestEntity.CurrentWarehouseId != null)
         {
-            ItemEntity itemEntity = await _itemRepository.GetItemById(itemRequestEntity.ItemId);
+            ItemEntity itemEntity = await _itemRepository.GetItemById(tenantId, itemRequestEntity.ItemId);
 
             if (itemEntity == null)
             {
@@ -86,7 +86,7 @@ public class ItemRequestService : IItemRequestService
             if (franchiseUserEntity.WarehouseId == itemRequestEntity.CurrentWarehouseId)
             {
                 itemRequestEntity.Status = itemRequestStatus;
-                await _itemRequestRepository.UpdateItemRequest(itemRequestEntity);
+                await _itemRequestRepository.UpdateItemRequest(tenantId, itemRequestEntity);
             }
             else
             {
@@ -98,24 +98,24 @@ public class ItemRequestService : IItemRequestService
             if (franchiseUserEntity.WarehouseId == itemRequestEntity.RequestedWarehouseId)
             {
                 itemRequestEntity.Status = itemRequestStatus;
-                await _itemRequestRepository.UpdateItemRequest(itemRequestEntity);
+                await _itemRequestRepository.UpdateItemRequest(tenantId, itemRequestEntity);
                 if (itemRequestEntity.Status == ItemRequestEnum.ApprovedForEntering)
                 {
                     // ako item vec postoji u nekom warehouse
                     if (itemRequestEntity.CurrentWarehouseId != null)
                     {
-                        ItemEntity itemEntity = await _itemRepository.GetItemById(itemRequestEntity.ItemId);
+                        ItemEntity itemEntity = await _itemRepository.GetItemById(tenantId, itemRequestEntity.ItemId);
                         if (itemEntity == null)
                         {
                             throw new Exception("Item does not exist");
                         }
                         itemEntity.WarehouseId = itemRequestEntity.RequestedWarehouseId;
-                        await _itemRepository.UpdateItem(itemEntity);
+                        await _itemRepository.UpdateItem(tenantId, itemEntity);
                     } else
                     {
                       ItemEntity newItemEntity = new ItemEntity(itemRequestEntity.ItemId, itemRequestEntity.ItemName,
                           itemRequestEntity.ItemDescription, itemRequestEntity.RequestedWarehouseId);
-                      await _itemRepository.InsertItem(newItemEntity); 
+                      await _itemRepository.InsertItem(tenantId, newItemEntity); 
                     }
                 }
             }
@@ -130,22 +130,22 @@ public class ItemRequestService : IItemRequestService
         }
     }
     
-    public async Task DeleteItemRequest(Guid id)
+    public async Task DeleteItemRequest(Guid tenantId, Guid id)
     {
-        if (!await _itemRequestRepository.Exists(id))       
+        if (!await _itemRequestRepository.Exists(tenantId, id))       
         {
             throw new Exception("Item request does not exist");
         }
         
-        await _itemRequestRepository.DeleteItemRequest(id);
+        await _itemRequestRepository.DeleteItemRequest(tenantId, id);
     }
 }
 
 public interface IItemRequestService
 {
-    public Task<List<ItemRequestEntity>> GetItemRequests();
-    public Task<ItemRequestEntity> GetItemRequestById(Guid id);
-    public Task CreateItemRequest(ItemRequestDto itemRequestEntity, Guid operatorId);
-    public Task UpdateItemRequest(Guid id, ItemRequestEnum itemRequestDto, Guid operatorId);
-    public Task DeleteItemRequest(Guid id);
+    public Task<List<ItemRequestEntity>> GetItemRequests(Guid tenantId);
+    public Task<ItemRequestEntity> GetItemRequestById(Guid tenantId, Guid id);
+    public Task CreateItemRequest(Guid tenantId, ItemRequestDto itemRequestEntity, Guid operatorId);
+    public Task UpdateItemRequest(Guid tenantId, Guid id, ItemRequestEnum itemRequestDto, Guid operatorId);
+    public Task DeleteItemRequest(Guid tenantId, Guid id);
 }

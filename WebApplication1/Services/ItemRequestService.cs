@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Data;
+using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Database.Entities;
 using WebApplication1.Enums;
 using WebApplication1.Interfaces;
@@ -39,26 +40,38 @@ public class ItemRequestService : IItemRequestService
     public async Task CreateItemRequest(ItemRequestDto itemRequestDto, Guid operatorId)
     {
         ItemRequestEntity itemRequestEntity = new ItemRequestEntity(itemRequestDto.ItemId, itemRequestDto.ItemName,
-            itemRequestDto.ItemDescription, itemRequestDto.CurrentWarehouseId, itemRequestDto.RequestedWarehouseId,
-            itemRequestDto.RequestOperatorId);
+            itemRequestDto.ItemDescription, operatorId, itemRequestDto.CurrentWarehouseId, itemRequestDto.RequestedWarehouseId);
+        
+        // item nije trenutno u drugom warehouseu
+        if (itemRequestDto.CurrentWarehouseId != null)
+        {
+            itemRequestEntity.Status = ItemRequestEnum.ApprovedForLeaving;
+        }
+        else
+        {
+            itemRequestEntity.Status = ItemRequestEnum.Requested;
+        }
 
         await _itemRequestRepository.InsertItemRequest(itemRequestEntity); 
     }
 
-    public async Task UpdateItemRequest(Guid id, ItemRequestEnum itemRequestStatus, Guid operatorId)
+    public async Task UpdateItemRequest(Guid itemRequestId, ItemRequestEnum itemRequestStatus, Guid operatorId)
     {
-        ItemRequestEntity itemRequestEntity = await _itemRequestRepository.GetItemRequestById(id);
+        ItemRequestEntity itemRequestEntity = await _itemRequestRepository.GetItemRequestById(itemRequestId);
         
         if (itemRequestEntity == null)
         {
             throw new Exception("Item request does not exist");
         }
         
-        ItemEntity itemEntity = await _itemRepository.GetItemById(itemRequestEntity.ItemId);
-        
-        if (itemEntity == null)
+        if (itemRequestEntity.CurrentWarehouseId != null)
         {
-            throw new Exception("Item does not exist");
+            ItemEntity itemEntity = await _itemRepository.GetItemById(itemRequestEntity.ItemId);
+
+            if (itemEntity == null)
+            {
+                throw new Exception("Item does not exist");
+            }
         }
         
         FranchiseUserEntity franchiseUserEntity = await _franchiseUserRepository.GetFranchiseUserById(operatorId);
@@ -68,21 +81,63 @@ public class ItemRequestService : IItemRequestService
             throw new Exception("Franchise user does not exist");
         }
         
-        // provjera je li warehouseId unutar FranchiseUsera 
-        if (itemEntity.WarehouseId != franchiseUserEntity.WarehouseId)
+        if (itemRequestEntity.Status == ItemRequestEnum.Requested)
         {
-            throw new Exception("Francise user does not have access to this warehouse");
+            if (franchiseUserEntity.WarehouseId == itemRequestEntity.CurrentWarehouseId)
+            {
+                itemRequestEntity.Status = itemRequestStatus;
+                await _itemRequestRepository.UpdateItemRequest(itemRequestEntity);
+            }
+            else
+            {
+                throw new Exception("Operator is not in the same warehouse as the item");
+            }
+            
+        } else if(itemRequestEntity.Status == ItemRequestEnum.ApprovedForLeaving)
+        {
+            if (franchiseUserEntity.WarehouseId == itemRequestEntity.RequestedWarehouseId)
+            {
+                itemRequestEntity.Status = itemRequestStatus;
+                await _itemRequestRepository.UpdateItemRequest(itemRequestEntity);
+                if (itemRequestEntity.Status == ItemRequestEnum.ApprovedForEntering)
+                {
+                    // ako item vec postoji u nekom warehouse
+                    if (itemRequestEntity.CurrentWarehouseId != null)
+                    {
+                        ItemEntity itemEntity = await _itemRepository.GetItemById(itemRequestEntity.ItemId);
+                        if (itemEntity == null)
+                        {
+                            throw new Exception("Item does not exist");
+                        }
+                        itemEntity.WarehouseId = itemRequestEntity.RequestedWarehouseId;
+                        await _itemRepository.UpdateItem(itemEntity);
+                    } else
+                    {
+                      ItemEntity newItemEntity = new ItemEntity(itemRequestEntity.ItemId, itemRequestEntity.ItemName,
+                          itemRequestEntity.ItemDescription, itemRequestEntity.RequestedWarehouseId);
+                      await _itemRepository.InsertItem(newItemEntity); 
+                    }
+                }
+            }
+            else
+            {
+                throw new Exception("Operator is not in the same warehouse as the item"); 
+            }
+        } 
+        else
+        {
+            throw new Exception("Invalid Request or Item is not approved for leaving warehouse"); 
+        }
+    }
+    
+    public async Task DeleteItemRequest(Guid id)
+    {
+        if (!await _itemRequestRepository.Exists(id))       
+        {
+            throw new Exception("Item request does not exist");
         }
         
-        itemRequestEntity.Status = itemRequestStatus; 
-        await _itemRequestRepository.UpdateItemRequest(itemRequestEntity);
-
-        if (itemRequestStatus == ItemRequestEnum.Approved)
-        {
-            // item insert u warehouse
-            await _itemRepository.InsertItem(itemEntity);
-        }
-        
+        await _itemRequestRepository.DeleteItemRequest(id);
     }
 }
 
@@ -91,7 +146,6 @@ public interface IItemRequestService
     public Task<List<ItemRequestEntity>> GetItemRequests();
     public Task<ItemRequestEntity> GetItemRequestById(Guid id);
     public Task CreateItemRequest(ItemRequestDto itemRequestEntity, Guid operatorId);
-    
     public Task UpdateItemRequest(Guid id, ItemRequestEnum itemRequestDto, Guid operatorId);
-
+    public Task DeleteItemRequest(Guid id);
 }

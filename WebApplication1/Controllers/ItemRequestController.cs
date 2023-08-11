@@ -79,12 +79,30 @@ public class ItemRequestController : ControllerBase
     [HttpPut(Name = "ItemRequestUpdate")]
     [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.OK)]
-    public async Task<IActionResult> Update([FromQuery] Guid itemRequestId, [FromQuery] ItemRequestEnum itemStatus)
+    public async Task<IActionResult> Update([FromQuery] Guid itemRequestId, [FromQuery] String itemStatus)
     {
         try
         {   
             Guid operatorId = _userContextService.UserContext.UserId;
-            await _itemRequestService.UpdateItemRequest(itemRequestId, itemStatus, operatorId);
+            ItemRequestEnum status = (ItemRequestEnum) Enum.Parse(typeof(ItemRequestEnum), itemStatus);
+            await _itemRequestService.UpdateItemRequest(itemRequestId, status, operatorId);
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
+    [VerifyGrants("backoffice")]
+    [HttpDelete(Name = "DeleteItemRequest")]
+    [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    public async Task<IActionResult> Delete([FromQuery] Guid itemRequestId)
+    {
+        try
+        {   
+            await _itemRequestService.DeleteItemRequest(itemRequestId);
             return Ok();
         }
         catch (Exception e)

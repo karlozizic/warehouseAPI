@@ -15,5 +15,16 @@ public class ItemEntity
     public String? Description { get; set; }
     public Boolean Deleted { get; set; }
     public Guid WarehouseId { get; set; }
-
+    public Boolean reserved { get; set; }
+    
+    public ItemEntity(Guid id, String name, String? description, Guid warehouseId)
+    {
+        Id = id;
+        Name = name;
+        Description = description;
+        WarehouseId = warehouseId;
+        Deleted = false;
+        reserved = false;
+    }
+    
 }

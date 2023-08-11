@@ -3,6 +3,8 @@
 public enum ItemRequestEnum
 {
     Requested,
-    Approved,
-    Rejected
+    ApprovedForLeaving,
+    RejectedForLeaving,
+    ApprovedForEntering,
+    RejectedForEntering
 }

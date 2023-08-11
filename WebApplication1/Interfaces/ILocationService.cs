@@ -4,5 +4,5 @@ namespace WebApplication1.Interfaces;
 
 public interface ILocationService
 {
-    Task<List<LocationEntity>> GetLocations();
+    Task<List<LocationEntity>> GetLocations(Guid tenantId);
 }

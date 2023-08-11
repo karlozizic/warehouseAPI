@@ -11,13 +11,11 @@ namespace WebApplication1.Repositories;
 public class WarehouseRepository : IWarehouseRepository
 {
     private readonly IContextService _contextService;
-    private readonly IUserContextService _userContextService;
     
-    public WarehouseRepository(IContextService contextService, IUserContextService userContextService)
+    public WarehouseRepository(IContextService contextService)
     {
         //ContextService
         _contextService = contextService;
-        _userContextService = userContextService;
     }
     
     public async Task<List<WarehouseEntity>> GetWarehouses(Guid tenantId)
@@ -33,11 +31,11 @@ public class WarehouseRepository : IWarehouseRepository
     }
 
     // ** Provjeri jos! - fetch po Guid id 
-    public async Task<WarehouseEntity?> GetWarehouseById(Guid id)
+    public async Task<WarehouseEntity?> GetWarehouseById(Guid id, Guid tenantId)
     {
         // Find i FirstOrDefault - oboje imaju slozenost O(n) 
         // Find 
-        using (var warehouseContext = _contextService.CreateDbContext(_userContextService.UserContext.TenantId))
+        using (var warehouseContext = _contextService.CreateDbContext(tenantId))
         {
             return await warehouseContext.Warehouse.FindAsync(id);
         }
@@ -45,27 +43,27 @@ public class WarehouseRepository : IWarehouseRepository
         // return await _warehouseContext.Warehouses.FirstOrDefaultAsync(x => x.id == id);
     }
 
-    public async Task<Boolean> Exists(Guid id)
+    public async Task<Boolean> Exists(Guid id, Guid tenantId)
     {
-        using (var warehouseContext = _contextService.CreateDbContext(_userContextService.UserContext.TenantId))
+        using (var warehouseContext = _contextService.CreateDbContext(tenantId))
         {
             return await warehouseContext.Warehouse.AnyAsync(x => x.Id == id);
         }
     }
     
     // ** Sljedeci blok metoda vraca void, ali asinkrone su pa se vraca Task 
-    public async Task InsertWarehouse(WarehouseEntity warehouseEntity)
+    public async Task InsertWarehouse(WarehouseEntity warehouseEntity, Guid tenantId)
     {
-        using (var warehouseContext = _contextService.CreateDbContext(_userContextService.UserContext.TenantId))
+        using (var warehouseContext = _contextService.CreateDbContext(tenantId))
         {
             await Task.FromResult(warehouseContext.Warehouse.Add(warehouseEntity));
             await warehouseContext.SaveChangesAsync();
         }
     }
     
-    public async Task DeleteWarehouse(Guid id)
+    public async Task DeleteWarehouse(Guid id, Guid tenantId)
     {
-        using (var warehouseContext = _contextService.CreateDbContext(_userContextService.UserContext.TenantId))
+        using (var warehouseContext = _contextService.CreateDbContext(tenantId))
         {
             WarehouseEntity? warehouse = await warehouseContext.Warehouse.FindAsync(id);
             // Radimo soft delete - ne brisemo iz baze nego samo postavljamo deleted na true
@@ -75,7 +73,7 @@ public class WarehouseRepository : IWarehouseRepository
         }
     }
 
-    public async Task UpdateWarehouse(WarehouseUpdateClass warehouseUpdate)
+    public async Task UpdateWarehouse(WarehouseUpdateClass warehouseUpdate, Guid tenantId)
     {
         // sljedeci nacin nije radio
         /*_warehouseContext.Attach(warehouseEntity); 
@@ -83,7 +81,7 @@ public class WarehouseRepository : IWarehouseRepository
         await _warehouseContext.SaveChangesAsync();*/
         
         //provjera je li warehouse deleted 
-        using (var warehouseContext = _contextService.CreateDbContext(_userContextService.UserContext.TenantId))
+        using (var warehouseContext = _contextService.CreateDbContext(tenantId))
         {
             Guid id = warehouseUpdate.Id;
             WarehouseEntity? warehouseEntity = await warehouseContext.Warehouse.SingleAsync(x => x.Id == id);
@@ -132,9 +130,9 @@ public class WarehouseRepository : IWarehouseRepository
             .ToListAsync();
     }*/
 
-    public async Task InsertAllWarehouses(List<WarehouseEntity> warehouseEntities)
+    public async Task InsertAllWarehouses(List<WarehouseEntity> warehouseEntities, Guid tenantId)
     {
-        using (var warehouseContext = _contextService.CreateDbContext(_userContextService.UserContext.TenantId))
+        using (var warehouseContext = _contextService.CreateDbContext(tenantId))
         {
             await warehouseContext.Warehouse.AddRangeAsync(warehouseEntities);
             await warehouseContext.SaveChangesAsync();

@@ -6,16 +6,16 @@ namespace WebApplication1.Interfaces;
 
 public interface IWarehouseService
 {
-    Task<List<WarehouseEntity>> GetWarehouses(Guid userContextTenantId);
-    Task<WarehouseEntity> GetWarehouseById(Guid id);
-    Task InsertWarehouse(WarehouseEntity warehouseEntity);
-    Task DeleteWarehouse(Guid id);
-    Task UpdateWarehouse(WarehouseUpdateClass warehouseEntity);
+    Task<List<WarehouseEntity>> GetWarehouses(Guid tenantId);
+    Task<WarehouseEntity> GetWarehouseById(Guid id, Guid tenantId);
+    Task InsertWarehouse(WarehouseEntity warehouseEntity, Guid tenantId);
+    Task DeleteWarehouse(Guid id, Guid tenantId);
+    Task UpdateWarehouse(WarehouseUpdateClass warehouseEntity, Guid tenantId);
     
     /*
     Task<List<ItemEntity>> GetWarehouseItems(Guid warehouseId, String? name);
     */
     
-    Task InsertWarehouses(List<CostCenterDto> warehouses);
+    Task InsertWarehouses(List<CostCenterDto> warehouses, Guid tenantId);
 
 }

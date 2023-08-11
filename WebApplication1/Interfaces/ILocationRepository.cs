@@ -2,8 +2,8 @@
 
 namespace WebApplication1.Interfaces;
 
-public interface ILocationRepository : IDisposable
+public interface ILocationRepository
 {
-    public Task<List<LocationEntity>> GetLocations();
-    public Task<Guid> Add(LocationEntity locationEntity);
+    public Task<List<LocationEntity>> GetLocations(Guid tenantId);
+    public Task<Guid> Add(LocationEntity locationEntity, Guid tenantId);
 }

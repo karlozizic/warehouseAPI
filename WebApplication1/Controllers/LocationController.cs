@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Interfaces;
 using WebApplication1.Services;
+using X.Auth.Interface.Services;
 
 namespace WebApplication1.Controllers;
 
@@ -12,11 +13,13 @@ public class LocationController : ControllerBase
 {
     private readonly ILogger<LocationController> _logger;
     private readonly ILocationService _locationService;
+    private readonly IUserContextService _userContextService;
     
-    public LocationController(ILogger<LocationController> logger, ILocationService locationService)
+    public LocationController(ILogger<LocationController> logger, ILocationService locationService, IUserContextService userContextService)
     {
         _logger = logger;
         _locationService = locationService;
+        _userContextService = userContextService;
     }
     
     [HttpGet(Name = "GetLocations")]
@@ -26,7 +29,7 @@ public class LocationController : ControllerBase
     {
         try
         {
-            var locations =  await _locationService.GetLocations();
+            var locations =  await _locationService.GetLocations(_userContextService.UserContext.TenantId);
             return Ok(locations);
         }
         catch (Exception e)

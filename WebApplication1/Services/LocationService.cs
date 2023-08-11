@@ -13,8 +13,8 @@ public class LocationService : ILocationService
         _locationRepository = locationRepository;
     }
     
-    public async Task<List<LocationEntity>> GetLocations()
+    public async Task<List<LocationEntity>> GetLocations(Guid tenantId)
     {
-        return await _locationRepository.GetLocations();
+        return await _locationRepository.GetLocations(tenantId);
     }
 }

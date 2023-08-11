@@ -28,7 +28,6 @@ public class WarehouseController : ControllerBase
         _retailService = retailService;
     }
     
-    [VerifyGrants("backoffice")]
     [HttpGet(Name = "GetWarehouses")]
     [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.OK)]
@@ -52,7 +51,7 @@ public class WarehouseController : ControllerBase
     {
         try
         { 
-            var warehouse = await _warehouseService.GetWarehouseById(id);
+            var warehouse = await _warehouseService.GetWarehouseById(id, _userContextService.UserContext.TenantId);
             return Ok(warehouse);
         }
         catch (Exception e)
@@ -69,7 +68,7 @@ public class WarehouseController : ControllerBase
         //nije potrebno ModelState.IsValid jer se automatski validira 
         try
         {
-            await _warehouseService.InsertWarehouse(warehouseEntity);
+            await _warehouseService.InsertWarehouse(warehouseEntity, _userContextService.UserContext.TenantId);
             return Ok(warehouseEntity);
         }
         catch (Exception e)
@@ -85,7 +84,7 @@ public class WarehouseController : ControllerBase
     {
         try
         {
-            await _warehouseService.DeleteWarehouse(id);
+            await _warehouseService.DeleteWarehouse(id, _userContextService.UserContext.TenantId);
             return Ok();
         }
         catch (Exception e)
@@ -101,7 +100,7 @@ public class WarehouseController : ControllerBase
     {
         try
         {
-            await _warehouseService.UpdateWarehouse(warehouseEntity);
+            await _warehouseService.UpdateWarehouse(warehouseEntity, _userContextService.UserContext.TenantId);
             return Ok();
         }
         catch (Exception e)
@@ -137,7 +136,7 @@ public class WarehouseController : ControllerBase
         try
         {
             var warehouses = await _retailService.FetchWarehouses(_userContextService.UserContext.TenantId, name, city);
-            await _warehouseService.InsertWarehouses(warehouses);   
+            await _warehouseService.InsertWarehouses(warehouses, _userContextService.UserContext.TenantId);   
             return Ok();
         }
         catch (Exception e)

@@ -2,33 +2,39 @@
 using WebApplication1.Database;
 using WebApplication1.Database.Entities;
 using WebApplication1.Interfaces;
+using WebApplication1.Services;
 
 namespace WebApplication1.Repositories;
 
-public class LocationRepository : ILocationRepository, IDisposable
+public class LocationRepository : ILocationRepository
 {
-    private WarehouseContext _warehouseContext;
+    private readonly IContextService _contextService;
     
-    public LocationRepository(WarehouseContext warehouseContext)
+    public LocationRepository(IContextService contextService)
     {
-        _warehouseContext = warehouseContext;
+        _contextService = contextService;
     }
     
-    public async Task<List<LocationEntity>> GetLocations()
+    public async Task<List<LocationEntity>> GetLocations(Guid tenantId)
     {
-        return await _warehouseContext.Location.ToListAsync();
+        using (var warehouseContext = _contextService.CreateDbContext(tenantId))
+        {
+            return await warehouseContext.Location.ToListAsync();
+        }
     }
 
-    public async Task<Guid> Add(LocationEntity locationEntity)
+    public async Task<Guid> Add(LocationEntity locationEntity, Guid tenantId)
     {
-        _warehouseContext.Location.Add(locationEntity);
-        await _warehouseContext.SaveChangesAsync();
-        return locationEntity.Id;
+        using (var warehouseContext = _contextService.CreateDbContext(tenantId))
+        {
+            warehouseContext.Location.Add(locationEntity);
+            await warehouseContext.SaveChangesAsync();
+            return locationEntity.Id;
+        }
     }
-    
     // https://learn.microsoft.com/en-us/aspnet/mvc/overview/older-versions/getting-started-with-ef-5-using-mvc-4/implementing-the-repository-and-unit-of-work-patterns-in-an-asp-net-mvc-application
     // Implementacija IDisposable interface-a 
-    private bool disposed = false;
+    /*private bool disposed = false;
     protected virtual void Dispose(bool disposing)
     {
         if (!this.disposed)
@@ -45,5 +51,5 @@ public class LocationRepository : ILocationRepository, IDisposable
     {
         Dispose(true);
         GC.SuppressFinalize(this);
-    }
+    }*/
 }

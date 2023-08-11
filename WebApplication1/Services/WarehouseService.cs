@@ -22,46 +22,46 @@ public class WarehouseService : IWarehouseService
         return await _warehouseRepository.GetWarehouses(tenantId);
     }
     
-    public async Task<WarehouseEntity> GetWarehouseById(Guid id)
+    public async Task<WarehouseEntity> GetWarehouseById(Guid id, Guid tenantId)
     {
-        if (!await _warehouseRepository.Exists(id))
+        if (!await _warehouseRepository.Exists(id, tenantId))
         {
             throw new Exception("Warehouse does not exist");
         }
         
-        return await _warehouseRepository.GetWarehouseById(id);
+        return await _warehouseRepository.GetWarehouseById(id, tenantId);
     }
     
     
-    public async Task InsertWarehouse(WarehouseEntity warehouseEntity)
+    public async Task InsertWarehouse(WarehouseEntity warehouseEntity, Guid tenantId)
     {
         /*if (await _warehouseRepository.Exists(warehouse.Id))
         {
             throw new Exception("Warehouse already exists"); 
         }*/
         
-        await _warehouseRepository.InsertWarehouse(warehouseEntity);
+        await _warehouseRepository.InsertWarehouse(warehouseEntity, tenantId);
     }
     
-    public async Task DeleteWarehouse(Guid id)
+    public async Task DeleteWarehouse(Guid id, Guid tenantId)
     {
-        if (!await _warehouseRepository.Exists(id))
+        if (!await _warehouseRepository.Exists(id, tenantId))
         {
             throw new Exception("Warehouse does not exist");
         }
         
-        await _warehouseRepository.DeleteWarehouse(id);
+        await _warehouseRepository.DeleteWarehouse(id, tenantId);
     }
     
-    public async Task UpdateWarehouse(WarehouseUpdateClass warehouseUpdateClass)
+    public async Task UpdateWarehouse(WarehouseUpdateClass warehouseUpdateClass, Guid tenantId)
     {
         var id = warehouseUpdateClass.Id; 
-        if (!await _warehouseRepository.Exists(id))
+        if (!await _warehouseRepository.Exists(id, tenantId))
         {
             throw new Exception("Warehouse does not exist");
         }
         
-        await _warehouseRepository.UpdateWarehouse(warehouseUpdateClass);
+        await _warehouseRepository.UpdateWarehouse(warehouseUpdateClass, tenantId);
     }
 
     /*public async Task<List<ItemEntity>> GetWarehouseItems(Guid warehouseId, String? name)
@@ -82,20 +82,20 @@ public class WarehouseService : IWarehouseService
         return items; 
     }*/
     
-    public async Task InsertWarehouses(List<CostCenterDto> warehouses)
+    public async Task InsertWarehouses(List<CostCenterDto> warehouses, Guid tenantId)
     {
         List<WarehouseEntity> warehouseEntities = new List<WarehouseEntity>();
 
         foreach (var warehouse in warehouses)
         {
             // potrebna je efikasnija implementacija - zbog ovog duze traje request
-            Guid locationId = await _locationRepository.Add(new LocationEntity(warehouse.Address, warehouse.City, warehouse.PostalCode));
+            Guid locationId = await _locationRepository.Add(new LocationEntity(warehouse.Address, warehouse.City, warehouse.PostalCode), tenantId);
             
             warehouseEntities.Add(new WarehouseEntity(warehouse.Name, locationId, warehouse.PhoneNumber,
                 warehouse.Code, warehouse.Deleted, warehouse.DefaultLanguage, warehouse.IsPayoutLockedForOtherCostCenter));
         }
         
-        await _warehouseRepository.InsertAllWarehouses(warehouseEntities);
+        await _warehouseRepository.InsertAllWarehouses(warehouseEntities, tenantId);
 
     }
 }

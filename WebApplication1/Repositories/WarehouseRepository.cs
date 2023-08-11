@@ -31,7 +31,7 @@ public class WarehouseRepository : IWarehouseRepository
     }
 
     // ** Provjeri jos! - fetch po Guid id 
-    public async Task<WarehouseEntity?> GetWarehouseById(Guid id, Guid tenantId)
+    public async Task<WarehouseEntity?> GetWarehouseById(Guid tenantId, Guid id)
     {
         // Find i FirstOrDefault - oboje imaju slozenost O(n) 
         // Find 
@@ -43,7 +43,7 @@ public class WarehouseRepository : IWarehouseRepository
         // return await _warehouseContext.Warehouses.FirstOrDefaultAsync(x => x.id == id);
     }
 
-    public async Task<Boolean> Exists(Guid id, Guid tenantId)
+    public async Task<Boolean> Exists(Guid tenantId, Guid id)
     {
         using (var warehouseContext = _contextService.CreateDbContext(tenantId))
         {
@@ -52,7 +52,7 @@ public class WarehouseRepository : IWarehouseRepository
     }
     
     // ** Sljedeci blok metoda vraca void, ali asinkrone su pa se vraca Task 
-    public async Task InsertWarehouse(WarehouseEntity warehouseEntity, Guid tenantId)
+    public async Task InsertWarehouse( Guid tenantId, WarehouseEntity warehouseEntity)
     {
         using (var warehouseContext = _contextService.CreateDbContext(tenantId))
         {
@@ -61,7 +61,7 @@ public class WarehouseRepository : IWarehouseRepository
         }
     }
     
-    public async Task DeleteWarehouse(Guid id, Guid tenantId)
+    public async Task DeleteWarehouse(Guid tenantId, Guid id)
     {
         using (var warehouseContext = _contextService.CreateDbContext(tenantId))
         {
@@ -73,7 +73,7 @@ public class WarehouseRepository : IWarehouseRepository
         }
     }
 
-    public async Task UpdateWarehouse(WarehouseUpdateClass warehouseUpdate, Guid tenantId)
+    public async Task UpdateWarehouse( Guid tenantId, WarehouseUpdateClass warehouseUpdate)
     {
         // sljedeci nacin nije radio
         /*_warehouseContext.Attach(warehouseEntity); 
@@ -130,7 +130,7 @@ public class WarehouseRepository : IWarehouseRepository
             .ToListAsync();
     }*/
 
-    public async Task InsertAllWarehouses(List<WarehouseEntity> warehouseEntities, Guid tenantId)
+    public async Task InsertAllWarehouses(Guid tenantId, List<WarehouseEntity> warehouseEntities)
     {
         using (var warehouseContext = _contextService.CreateDbContext(tenantId))
         {

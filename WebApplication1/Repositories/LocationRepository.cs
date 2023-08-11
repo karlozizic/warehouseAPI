@@ -23,7 +23,7 @@ public class LocationRepository : ILocationRepository
         }
     }
 
-    public async Task<Guid> Add(LocationEntity locationEntity, Guid tenantId)
+    public async Task<Guid> Add(Guid tenantId, LocationEntity locationEntity)
     {
         using (var warehouseContext = _contextService.CreateDbContext(tenantId))
         {

@@ -14,7 +14,7 @@ public class FranchiseUserService : IFranchiseUserService
         _franchiseUserRepository = franchiseUserRepository;
     }
     
-    public async Task InsertFranchiseUsers(List<FranchiseUserDto> franchiseUsers)
+    public async Task InsertFranchiseUsers(Guid tenantId, List<FranchiseUserDto> franchiseUsers)
     {
         List<FranchiseUserEntity> franchiseUserEntities = new List<FranchiseUserEntity>();
 
@@ -24,25 +24,25 @@ public class FranchiseUserService : IFranchiseUserService
                 franchiseUser.UserId, franchiseUser.FranchiseId, franchiseUser.Username, franchiseUser.TenantId));
         }
         
-        await _franchiseUserRepository.InsertAllFranchiseUsers(franchiseUserEntities);
+        await _franchiseUserRepository.InsertAllFranchiseUsers(tenantId, franchiseUserEntities);
     }
     
-    public async Task AssignToWarehouse(Guid franchiseUserId, Guid warehouseId)
+    public async Task AssignToWarehouse(Guid tenantId, Guid franchiseUserId, Guid warehouseId)
     {
         
         FranchiseUserUpdateClass franchiseUserUpdate = new FranchiseUserUpdateClass();
         franchiseUserUpdate.WarehouseId = warehouseId;
         
-        await _franchiseUserRepository.UpdateFranchiseUser(franchiseUserUpdate, franchiseUserId);
+        await _franchiseUserRepository.UpdateFranchiseUser(tenantId, franchiseUserUpdate, franchiseUserId);
     }
 
-    public async Task<FranchiseUserEntity> GetFranchiseUserById(Guid franchiseUserId)
+    public async Task<FranchiseUserEntity> GetFranchiseUserById(Guid tenantId, Guid franchiseUserId)
     {
-        if (!await _franchiseUserRepository.Exists(franchiseUserId))
+        if (!await _franchiseUserRepository.Exists(tenantId, franchiseUserId))
         {
             throw new Exception("Franchise User doesn't exist");
         }
         
-        return await _franchiseUserRepository.GetFranchiseUserById(franchiseUserId);
+        return await _franchiseUserRepository.GetFranchiseUserById(tenantId, franchiseUserId);
     }
 }

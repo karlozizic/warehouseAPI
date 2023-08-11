@@ -34,7 +34,7 @@ public class FranchiseUserController : ControllerBase
         try
         {
             var franchiseUsers = await _retailService.FetchFranchiseUsers(_userContextService.UserContext.TenantId);
-            await _franchiseUserService.InsertFranchiseUsers(franchiseUsers); 
+            await _franchiseUserService.InsertFranchiseUsers(_userContextService.UserContext.TenantId, franchiseUsers); 
             return Ok();
         }
         catch (Exception e)
@@ -51,7 +51,7 @@ public class FranchiseUserController : ControllerBase
     {
         try
         { 
-            var franchiseUser = await _franchiseUserService.GetFranchiseUserById(franchiseUserId);
+            var franchiseUser = await _franchiseUserService.GetFranchiseUserById(_userContextService.UserContext.TenantId, franchiseUserId);
             return Ok(franchiseUser);
         }
         catch (Exception e)
@@ -68,7 +68,7 @@ public class FranchiseUserController : ControllerBase
     {
         try
         {
-            await _franchiseUserService.AssignToWarehouse(franchiseUserId, warehouseId);
+            await _franchiseUserService.AssignToWarehouse(_userContextService.UserContext.TenantId, franchiseUserId, warehouseId);
             return Ok();
         }
         catch (Exception e)

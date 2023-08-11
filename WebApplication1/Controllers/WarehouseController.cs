@@ -51,7 +51,7 @@ public class WarehouseController : ControllerBase
     {
         try
         { 
-            var warehouse = await _warehouseService.GetWarehouseById(id, _userContextService.UserContext.TenantId);
+            var warehouse = await _warehouseService.GetWarehouseById(_userContextService.UserContext.TenantId, id);
             return Ok(warehouse);
         }
         catch (Exception e)
@@ -68,7 +68,7 @@ public class WarehouseController : ControllerBase
         //nije potrebno ModelState.IsValid jer se automatski validira 
         try
         {
-            await _warehouseService.InsertWarehouse(warehouseEntity, _userContextService.UserContext.TenantId);
+            await _warehouseService.InsertWarehouse(_userContextService.UserContext.TenantId, warehouseEntity);
             return Ok(warehouseEntity);
         }
         catch (Exception e)
@@ -84,7 +84,7 @@ public class WarehouseController : ControllerBase
     {
         try
         {
-            await _warehouseService.DeleteWarehouse(id, _userContextService.UserContext.TenantId);
+            await _warehouseService.DeleteWarehouse(_userContextService.UserContext.TenantId, id);
             return Ok();
         }
         catch (Exception e)
@@ -100,7 +100,7 @@ public class WarehouseController : ControllerBase
     {
         try
         {
-            await _warehouseService.UpdateWarehouse(warehouseEntity, _userContextService.UserContext.TenantId);
+            await _warehouseService.UpdateWarehouse(_userContextService.UserContext.TenantId, warehouseEntity);
             return Ok();
         }
         catch (Exception e)
@@ -136,7 +136,7 @@ public class WarehouseController : ControllerBase
         try
         {
             var warehouses = await _retailService.FetchWarehouses(_userContextService.UserContext.TenantId, name, city);
-            await _warehouseService.InsertWarehouses(warehouses, _userContextService.UserContext.TenantId);   
+            await _warehouseService.InsertWarehouses(_userContextService.UserContext.TenantId, warehouses);   
             return Ok();
         }
         catch (Exception e)

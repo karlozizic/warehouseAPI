@@ -74,7 +74,7 @@ public class ItemRequestService : IItemRequestService
             }
         }
         
-        FranchiseUserEntity franchiseUserEntity = await _franchiseUserRepository.GetFranchiseUserById(operatorId);
+        FranchiseUserEntity franchiseUserEntity = await _franchiseUserRepository.GetFranchiseUserById(tenantId, operatorId);
         
         if (franchiseUserEntity == null)
         {

@@ -5,10 +5,10 @@ namespace WebApplication1.Interfaces;
 
 public interface IFranchiseUserService
 {
-    Task InsertFranchiseUsers(List<FranchiseUserDto> franchiseUsers);
+    Task InsertFranchiseUsers(Guid tenantId, List<FranchiseUserDto> franchiseUsers);
     
-    Task AssignToWarehouse(Guid franchiseUserId, Guid warehouseId);
+    Task AssignToWarehouse(Guid tenantId, Guid franchiseUserId, Guid warehouseId);
     
-    Task<FranchiseUserEntity> GetFranchiseUserById(Guid userId);
+    Task<FranchiseUserEntity> GetFranchiseUserById(Guid tenantId, Guid userId);
     
 }

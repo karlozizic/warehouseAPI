@@ -3,66 +3,81 @@ using WebApplication1.Database;
 using WebApplication1.Database.Entities;
 using WebApplication1.Interfaces;
 using WebApplication1.Models;
+using WebApplication1.Services;
 
 namespace WebApplication1.Repositories;
 
 public class FranchiseUserRepository : IFranchiseUserRepository
 {
-    public WarehouseContext _warehouseContext;
+    private readonly IContextService _contextService;
     
-    public FranchiseUserRepository(WarehouseContext warehouseContext)
+    public FranchiseUserRepository(IContextService contextService)
     {
-        _warehouseContext = warehouseContext;
+        _contextService = contextService;
     }
     
-    public async Task InsertAllFranchiseUsers(List<FranchiseUserEntity> franchiseUserEntities)
+    public async Task InsertAllFranchiseUsers(Guid tenantId, List<FranchiseUserEntity> franchiseUserEntities)
     {
-        await _warehouseContext.FranchiseUser.AddRangeAsync(franchiseUserEntities);
-        await _warehouseContext.SaveChangesAsync(); 
-    }
-    
-    public async Task<bool> Exists(Guid userId)
-    {
-        var franchiseUser = await _warehouseContext.FranchiseUser.FirstOrDefaultAsync(x => x.UserId == userId);
-        
-        if (franchiseUser == null)
+        using (var warehouseContext = _contextService.CreateDbContext(tenantId))
         {
-            return false;
+            await warehouseContext.FranchiseUser.AddRangeAsync(franchiseUserEntities);
+            await warehouseContext.SaveChangesAsync();
         }
+    }
+    
+    public async Task<bool> Exists(Guid tenantId, Guid userId)
+    {
+        using (var warehouseContext = _contextService.CreateDbContext(tenantId))
+        {
+            var franchiseUser = await warehouseContext.FranchiseUser.FirstOrDefaultAsync(x => x.UserId == userId);
 
-        return true; 
+            if (franchiseUser == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
     
-    public async Task<FranchiseUserEntity> GetFranchiseUserById(Guid userId)
+    public async Task<FranchiseUserEntity> GetFranchiseUserById(Guid tenantId, Guid userId)
     {
-        var franchiseUser = await _warehouseContext.FranchiseUser.FirstOrDefaultAsync(x => x.UserId == userId);
-        
-        if (franchiseUser == null)
+        using (var warehouseContext = _contextService.CreateDbContext(tenantId))
         {
-            throw new Exception("Franchise user does not exist");
-        }
+            var franchiseUser = await warehouseContext.FranchiseUser.FirstOrDefaultAsync(x => x.UserId == userId);
 
-        return franchiseUser; 
+            if (franchiseUser == null)
+            {
+                throw new Exception("Franchise user does not exist");
+            }
+
+            return franchiseUser;
+        }
     }
     
-    public async Task UpdateFranchiseUser(FranchiseUserUpdateClass franchiseUserUpdateClass, Guid franchiseUserId)
+    public async Task UpdateFranchiseUser(Guid tenantId, FranchiseUserUpdateClass franchiseUserUpdateClass, Guid franchiseUserId)
     {
-        var franchiseUser = await _warehouseContext.FranchiseUser.FirstOrDefaultAsync(x => x.UserId == franchiseUserId);
-        
-        if (franchiseUser == null)
+        using (var warehouseContext = _contextService.CreateDbContext(tenantId))
         {
-            throw new Exception("Franchise user does not exist");
-        }
+            var franchiseUser =
+                await warehouseContext.FranchiseUser.FirstOrDefaultAsync(x => x.UserId == franchiseUserId);
 
-        if (franchiseUserUpdateClass.WarehouseId != null)
-        {
-            franchiseUser.WarehouseId = franchiseUserUpdateClass.WarehouseId;
+            if (franchiseUser == null)
+            {
+                throw new Exception("Franchise user does not exist");
+            }
+
+            if (franchiseUserUpdateClass.WarehouseId != null)
+            {
+                franchiseUser.WarehouseId = franchiseUserUpdateClass.WarehouseId;
+            }
+
+            if (franchiseUserUpdateClass.Username != null)
+            {
+                franchiseUser.Username = franchiseUserUpdateClass.Username;
+            }
+
+            await warehouseContext.SaveChangesAsync();
         }
-        if (franchiseUserUpdateClass.Username != null)
-        {
-            franchiseUser.Username = franchiseUserUpdateClass.Username;
-        }
-        
-        await _warehouseContext.SaveChangesAsync(); 
     }
 }

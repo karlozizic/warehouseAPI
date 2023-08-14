@@ -1,6 +1,8 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using WebApplication1.Enums;
+using WebApplication1.Hubs;
 using WebApplication1.Models;
 using WebApplication1.Services;
 using X.Auth.Interface.Services;
@@ -15,11 +17,14 @@ public class ItemRequestController : ControllerBase
 {
     private readonly IItemRequestService _itemRequestService;
     private readonly IUserContextService _userContextService;
+    private readonly IHubContext<NotificationHub> _hubContext;
     
-    public ItemRequestController(IItemRequestService itemRequestService, IUserContextService userContextService)
+    public ItemRequestController(IItemRequestService itemRequestService, IUserContextService userContextService,
+        IHubContext<NotificationHub> hubContext)
     {
         _itemRequestService = itemRequestService;
         _userContextService = userContextService;
+        _hubContext = hubContext;
     }
     
     [HttpGet(Name = "GetItemRequests")]
@@ -30,6 +35,7 @@ public class ItemRequestController : ControllerBase
         try
         {
             var itemRequests =  await _itemRequestService.GetItemRequests(_userContextService.UserContext.TenantId);
+            await _hubContext.Clients.All.SendAsync("ReceiveNotification", "Get ItemRequests");
             return Ok(itemRequests);
         }
         catch (Exception e)
@@ -46,6 +52,7 @@ public class ItemRequestController : ControllerBase
         try
         { 
             var itemRequest = await _itemRequestService.GetItemRequestById(_userContextService.UserContext.TenantId, id);
+            await _hubContext.Clients.All.SendAsync("ReceiveNotification", "Get ItemRequest By Id");
             return Ok(itemRequest);
         }
         catch (Exception e)
@@ -65,6 +72,7 @@ public class ItemRequestController : ControllerBase
             //operatorId se saznaje iz _userContextService
             Guid operatorId = _userContextService.UserContext.UserId; 
             await _itemRequestService.CreateItemRequest(_userContextService.UserContext.TenantId, itemRequest, operatorId);
+            await _hubContext.Clients.All.SendAsync("ReceiveNotification", "Create ItemRequest");
             return Ok();
         }
         catch (Exception e)
@@ -84,6 +92,7 @@ public class ItemRequestController : ControllerBase
             Guid operatorId = _userContextService.UserContext.UserId;
             ItemRequestEnum status = (ItemRequestEnum) Enum.Parse(typeof(ItemRequestEnum), itemStatus);
             await _itemRequestService.UpdateItemRequest(_userContextService.UserContext.TenantId, itemRequestId, status, operatorId);
+            await _hubContext.Clients.All.SendAsync("ReceiveNotification", "Get ItemRequests");
             return Ok();
         }
         catch (Exception e)
@@ -101,6 +110,7 @@ public class ItemRequestController : ControllerBase
         try
         {   
             await _itemRequestService.DeleteItemRequest(_userContextService.UserContext.TenantId, itemRequestId);
+            await _hubContext.Clients.All.SendAsync("ReceiveNotification", "Delete ItemRequest");
             return Ok();
         }
         catch (Exception e)

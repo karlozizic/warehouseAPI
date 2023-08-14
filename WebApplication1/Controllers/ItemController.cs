@@ -1,6 +1,8 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using WebApplication1.Database.Entities;
+using WebApplication1.Hubs;
 using WebApplication1.Interfaces;
 using WebApplication1.Services;
 using X.Auth.Interface.Services;
@@ -14,12 +16,14 @@ public class ItemController : ControllerBase
 {
     private readonly IItemService _itemService;
     private readonly IUserContextService _userContextService;
+    private readonly IHubContext<NotificationHub> _hubContext;
     
     public ItemController(IItemService itemService,
-        IUserContextService userContextService)
+        IUserContextService userContextService, IHubContext<NotificationHub> hubContext)
     {
         _itemService = itemService;
         _userContextService = userContextService;
+        _hubContext = hubContext;
     }
     
     [VerifyGrants("backoffice")]
@@ -31,6 +35,7 @@ public class ItemController : ControllerBase
         try
         {
             var item = await _itemService.GetItemById(_userContextService.UserContext.TenantId, id);
+            await _hubContext.Clients.All.SendAsync("ReceiveNotification", "Get Item");
             return Ok(item);
         }
         catch (Exception e)
@@ -47,6 +52,7 @@ public class ItemController : ControllerBase
         try
         {
             var items = await _itemService.GetWarehouseItems(_userContextService.UserContext.TenantId, warehouseId, name);
+            await _hubContext.Clients.All.SendAsync("ReceiveNotification", "Get Warehouse Items");
             return Ok(items);
         }
         catch (Exception e)
@@ -64,6 +70,7 @@ public class ItemController : ControllerBase
         try
         {
             await _itemService.UpdateItem(_userContextService.UserContext.TenantId, warehouseItemEntity); 
+            await _hubContext.Clients.All.SendAsync("ReceiveNotification", "Update Warehouse Item");
             return Ok();
         }
         catch (Exception e)
@@ -81,6 +88,7 @@ public class ItemController : ControllerBase
         try
         {
             await _itemService.ReserveItem(_userContextService.UserContext.TenantId, _userContextService.UserContext.UserId, itemId);
+            await _hubContext.Clients.All.SendAsync("ReceiveNotification", "Reserve Warehouse Item");
             return Ok();
         }
         catch (Exception e)

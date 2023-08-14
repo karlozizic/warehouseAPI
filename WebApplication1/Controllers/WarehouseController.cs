@@ -38,7 +38,7 @@ public class WarehouseController : ControllerBase
         try
         {
             var warehouses =  await _warehouseService.GetWarehouses(_userContextService.UserContext.TenantId);
-            await _hubContext.Clients.All.SendAsync("ReceiveNotification", "GetWarehouses");
+            await _hubContext.Clients.All.SendAsync("ReceiveNotification", "Get Warehouses Request");
             return Ok(warehouses);
         }
         catch (Exception e)
@@ -55,6 +55,8 @@ public class WarehouseController : ControllerBase
         try
         { 
             var warehouse = await _warehouseService.GetWarehouseById(_userContextService.UserContext.TenantId, id);
+            await _hubContext.Clients.All.SendAsync("ReceiveNotification", "Get Warehouse By Id Request");
+
             return Ok(warehouse);
         }
         catch (Exception e)
@@ -72,6 +74,7 @@ public class WarehouseController : ControllerBase
         try
         {
             CostCenterDto warehouseDto = await _warehouseService.InsertWarehouse(_userContextService.UserContext.TenantId, warehouseEntity);
+            await _hubContext.Clients.All.SendAsync("ReceiveNotification", "Insert Warehouse Request");
             return Ok(warehouseDto);
         }
         catch (Exception e)
@@ -88,6 +91,7 @@ public class WarehouseController : ControllerBase
         try
         {
             await _warehouseService.DeleteWarehouse(_userContextService.UserContext.TenantId, id);
+            await _hubContext.Clients.All.SendAsync("ReceiveNotification", "Delete Warehouse Request");
             return Ok();
         }
         catch (Exception e)
@@ -104,6 +108,7 @@ public class WarehouseController : ControllerBase
         try
         {
             await _warehouseService.UpdateWarehouse(_userContextService.UserContext.TenantId, warehouseEntity);
+            await _hubContext.Clients.All.SendAsync("ReceiveNotification", "Update Warehouse Request");
             return Ok();
         }
         catch (Exception e)
@@ -122,6 +127,7 @@ public class WarehouseController : ControllerBase
         {
             var warehouses = await _retailService.FetchWarehouses(_userContextService.UserContext.TenantId, name, city);
             await _warehouseService.InsertWarehouses(_userContextService.UserContext.TenantId, warehouses);   
+            await _hubContext.Clients.All.SendAsync("ReceiveNotification", "Fetch Warehouses Request");
             return Ok();
         }
         catch (Exception e)

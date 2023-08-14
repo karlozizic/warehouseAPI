@@ -1,15 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using WebApplication1.Database.Entities;
+using WebApplication1.Models;
 
 namespace WebApplication1.Database;
 
 public class WarehouseContext : DbContext
 {
     private readonly Guid _tenantId;
-
-    public WarehouseContext()
-    {
-    }
+    
     public WarehouseContext(DbContextOptions options, Guid tenantId) : base(options)
     {
         _tenantId = tenantId;
@@ -24,7 +23,7 @@ public class WarehouseContext : DbContext
 
     IConfigurationRoot _configuration = new ConfigurationBuilder()
         .SetBasePath(Directory.GetCurrentDirectory())
-        .AddJsonFile("appsettings.Development.json")
+        .AddJsonFile("appsettings.development.json")
         .Build();
 
     /*protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -58,7 +57,6 @@ public class WarehouseContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql(_configuration.GetConnectionString("WarehouseAppConnection"));
         optionsBuilder.LogTo(Console.WriteLine, LogLevel.Information);
         optionsBuilder.EnableSensitiveDataLogging(); 
     }

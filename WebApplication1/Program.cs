@@ -1,9 +1,11 @@
 using System.Net;
+using System.Text;
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1.Database;
 using WebApplication1.Hubs;
 using WebApplication1.Interfaces;
+using WebApplication1.Models;
 using WebApplication1.Repositories;
 using WebApplication1.Services;
 using X.Auth.Middleware.Extensions;
@@ -46,6 +48,8 @@ builder.Services.AddDbContext<WarehouseContext>();
 builder.Services.AddDbContext<WarehouseContext>(
     options => options.UseNpgsql(builder.Configuration.GetConnectionString("WarehouseAppConnection")));
 //
+
+builder.Services.Configure<AppSettingsModel>(builder.Configuration.GetSection("AppSettings"));
 
 // Potrebno je autowireati Interface i realizaciju Interfacea
 builder.Services.AddScoped<IWarehouseRepository, WarehouseRepository>(); 

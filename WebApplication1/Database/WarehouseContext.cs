@@ -8,6 +8,11 @@ namespace WebApplication1.Database;
 public class WarehouseContext : DbContext
 {
     private readonly Guid _tenantId;
+
+    public WarehouseContext()
+    {
+        
+    }
     
     public WarehouseContext(DbContextOptions options, Guid tenantId) : base(options)
     {
@@ -20,11 +25,6 @@ public class WarehouseContext : DbContext
     public virtual DbSet<FranchiseUserEntity> FranchiseUser { get; set; }
     
     public virtual DbSet<ItemRequestEntity> ItemRequest { get; set; }
-
-    IConfigurationRoot _configuration = new ConfigurationBuilder()
-        .SetBasePath(Directory.GetCurrentDirectory())
-        .AddJsonFile("appsettings.development.json")
-        .Build();
 
     /*protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

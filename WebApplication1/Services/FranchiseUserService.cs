@@ -21,7 +21,7 @@ public class FranchiseUserService : IFranchiseUserService
         foreach (var franchiseUser in franchiseUsers)
         {
             franchiseUserEntities.Add(new FranchiseUserEntity(franchiseUser.Id,
-                franchiseUser.UserId, franchiseUser.FranchiseId, franchiseUser.Username, franchiseUser.TenantId));
+                franchiseUser.UserId, franchiseUser.FranchiseId, franchiseUser.Username, tenantId));
         }
         
         await _franchiseUserRepository.InsertAllFranchiseUsers(tenantId, franchiseUserEntities);

@@ -119,7 +119,8 @@ public class WarehouseService : IWarehouseService
             Guid locationId = await _locationRepository.Add(tenantId, new LocationEntity(warehouse.Address, warehouse.City, warehouse.PostalCode));
             
             warehouseEntities.Add(new WarehouseEntity(warehouse.Name, locationId, warehouse.PhoneNumber,
-                warehouse.Code, warehouse.Deleted, warehouse.DefaultLanguage, warehouse.IsPayoutLockedForOtherCostCenter));
+                warehouse.Code, warehouse.Deleted, warehouse.DefaultLanguage, warehouse.IsPayoutLockedForOtherCostCenter, tenantId));
+
         }
         
         await _warehouseRepository.InsertAllWarehouses(tenantId, warehouseEntities);

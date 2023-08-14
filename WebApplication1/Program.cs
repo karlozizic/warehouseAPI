@@ -1,7 +1,9 @@
 using System.Net;
 using System.Text;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using WebApplication1.Database;
 using WebApplication1.Hubs;
 using WebApplication1.Interfaces;
@@ -42,12 +44,7 @@ builder.WebHost.UseKestrel(options =>
 });
 //
 // DbContext
-/*
-builder.Services.AddDbContext<WarehouseContext>();
-*/
-builder.Services.AddDbContext<WarehouseContext>(
-    options => options.UseNpgsql(builder.Configuration.GetConnectionString("WarehouseAppConnection")));
-//
+/*builder.Services.AddDbContext<WarehouseContext>();*/
 
 builder.Services.Configure<AppSettingsModel>(builder.Configuration.GetSection("AppSettings"));
 
@@ -73,6 +70,21 @@ builder.Services.AddRequestService();
 builder.Services.AddConsul(builder.Configuration);
 //
 
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidateIssuer = true,
+        ValidIssuer = "https://authorization.stage-volcano.com"
+    };
+});
+
 builder.Services.AddHttpClient(); 
 
 var app = builder.Build();
@@ -88,6 +100,8 @@ app.UseRouting();
 app.UseRefreshAuthMiddleware();
 app.UseAuthorization();
 app.MapControllers();
+app.UseAuthentication();
+
 app.MapHub<NotificationHub>("/hub");
 
 app.Run();

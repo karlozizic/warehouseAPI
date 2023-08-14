@@ -25,7 +25,7 @@ public class WarehouseEntity
     public Guid TenantId { get; set; }
 
     public WarehouseEntity(string name, Guid? locationId, string phoneNumber, string code, bool deleted,
-        string defaultLanguage, bool isPayoutLockedForOtherCostCenter)
+        string defaultLanguage, bool isPayoutLockedForOtherCostCenter, Guid tenantId)
     {
         this.Id = Guid.NewGuid();
         this.Name = name;
@@ -35,6 +35,7 @@ public class WarehouseEntity
         this.Deleted = deleted;
         this.DefaultLanguage = defaultLanguage;
         this.IsPayoutLockedForOtherCostCenter = isPayoutLockedForOtherCostCenter;
+        this.TenantId = tenantId;
     }
 
 }

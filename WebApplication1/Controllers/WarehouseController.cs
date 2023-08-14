@@ -8,6 +8,7 @@ using WebApplication1.Models;
 using WebApplication1.Services;
 using X.Auth.Interface.Services;
 using X.Auth.Middleware.Attributes;
+using X.Retail.Shared.Models.Models.Dtos;
 
 namespace WebApplication1.Controllers;
 
@@ -15,17 +16,14 @@ namespace WebApplication1.Controllers;
 [Route("api/public/[controller]/[action]")]
 public class WarehouseController : ControllerBase
 {
-    private readonly ILogger<WarehouseController> _logger; 
-    /*private readonly WarehouseContext _warehouseContext;*/
     private readonly IWarehouseService _warehouseService;
     private readonly IUserContextService _userContextService;
     private readonly IRetailService _retailService;
     private readonly IHubContext<NotificationHub> _hubContext;
 
-    public WarehouseController(ILogger<WarehouseController> logger, IWarehouseService warehouseService, 
+    public WarehouseController(IWarehouseService warehouseService, 
         IUserContextService userContextService, IRetailService retailService, IHubContext<NotificationHub> hubContext)
     {
-        _logger = logger;
         _warehouseService = warehouseService;
         _userContextService = userContextService;
         _retailService = retailService;
@@ -70,11 +68,11 @@ public class WarehouseController : ControllerBase
     [ProducesResponseType((int)HttpStatusCode.OK)]
     public async Task<IActionResult> Insert([FromBody] WarehouseEntity warehouseEntity)
     {
-        //nije potrebno ModelState.IsValid jer se automatski validira 
+        // nije potrebno ModelState.IsValid jer se automatski validira 
         try
         {
-            await _warehouseService.InsertWarehouse(_userContextService.UserContext.TenantId, warehouseEntity);
-            return Ok(warehouseEntity);
+            CostCenterDto warehouseDto = await _warehouseService.InsertWarehouse(_userContextService.UserContext.TenantId, warehouseEntity);
+            return Ok(warehouseDto);
         }
         catch (Exception e)
         {
@@ -113,24 +111,6 @@ public class WarehouseController : ControllerBase
             return BadRequest(e.Message);
         }
     }
-
-    /*[VerifyGrants("backoffice")]
-    [HttpGet(Name = "GetWarehouseItems")]
-    [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
-    [ProducesResponseType((int)HttpStatusCode.OK)]
-    public async Task<IActionResult> GetWarehouseItems([FromQuery] Guid warehouseId, [FromQuery] String? name)
-    {
-        try
-        {
-            var items = await _warehouseService.GetWarehouseItems(warehouseId, name);
-            //var user = _userContextService.UserContext; 
-            return Ok(items);
-        }
-        catch (Exception e)
-        {
-            return BadRequest(e.Message);
-        }
-    }*/
 
     [VerifyGrants("backoffice")]
     [HttpPost(Name = "FetchWarehouses")]

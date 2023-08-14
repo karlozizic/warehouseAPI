@@ -52,12 +52,13 @@ public class WarehouseRepository : IWarehouseRepository
     }
     
     // ** Sljedeci blok metoda vraca void, ali asinkrone su pa se vraca Task 
-    public async Task InsertWarehouse( Guid tenantId, WarehouseEntity warehouseEntity)
+    public async Task<Guid> InsertWarehouse(Guid tenantId, WarehouseEntity warehouseEntity)
     {
         using (var warehouseContext = _contextService.CreateDbContext(tenantId))
         {
             await Task.FromResult(warehouseContext.Warehouse.Add(warehouseEntity));
             await warehouseContext.SaveChangesAsync();
+            return warehouseEntity.Id;
         }
     }
     
@@ -73,7 +74,7 @@ public class WarehouseRepository : IWarehouseRepository
         }
     }
 
-    public async Task UpdateWarehouse( Guid tenantId, WarehouseUpdateClass warehouseUpdate)
+    public async Task UpdateWarehouse(Guid tenantId, WarehouseUpdateClass warehouseUpdate)
     {
         // sljedeci nacin nije radio
         /*_warehouseContext.Attach(warehouseEntity); 
@@ -121,15 +122,6 @@ public class WarehouseRepository : IWarehouseRepository
         }
     }
 
-    /*public async Task<List<ItemEntity>> GetWarehouseItems(Guid warehouseId)
-    {
-        
-        return await _warehouseContext.Warehouse
-            .Where(x => x.Id == warehouseId)
-            .SelectMany(x => x.Items)
-            .ToListAsync();
-    }*/
-
     public async Task InsertAllWarehouses(Guid tenantId, List<WarehouseEntity> warehouseEntities)
     {
         using (var warehouseContext = _contextService.CreateDbContext(tenantId))
@@ -159,4 +151,18 @@ public class WarehouseRepository : IWarehouseRepository
         Dispose(true);
         GC.SuppressFinalize(this);
     }*/
+}
+
+public interface IWarehouseRepository
+{
+    public Task<List<WarehouseEntity>> GetWarehouses(Guid tenantId);
+    public Task<WarehouseEntity?> GetWarehouseById(Guid tenantId, Guid id);
+    public Task<Boolean> Exists(Guid tenantId, Guid id); 
+    public Task<Guid> InsertWarehouse(Guid tenantId, WarehouseEntity warehouseEntity);
+    public Task DeleteWarehouse(Guid tenantId, Guid id);
+    public Task UpdateWarehouse(Guid tenantId, WarehouseUpdateClass warehouseUpdateClass);
+    /*
+    public Task<List<ItemEntity>> GetWarehouseItems(Guid warehouseId);
+    */
+    public Task InsertAllWarehouses(Guid tenantId, List<WarehouseEntity> warehouseEntities);
 }

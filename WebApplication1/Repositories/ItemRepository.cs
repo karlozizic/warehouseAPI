@@ -54,10 +54,26 @@ public class ItemRepository : IItemRepository
     {
         using (var warehouseContext = _contextService.CreateDbContext(tenantId))
         {
-            warehouseContext.Entry(warehouseItemEntity).State = EntityState.Modified;
+            ItemEntity itemEntity = await warehouseContext.Item.FirstOrDefaultAsync(e => e.Id == warehouseItemEntity.Id);
+            if (itemEntity.Name != warehouseItemEntity.Name)
+            {
+                itemEntity.Name = warehouseItemEntity.Name;
+            }
+            if (itemEntity.Description != warehouseItemEntity.Description)
+            {
+                itemEntity.Description = warehouseItemEntity.Description;
+            }
+            if (itemEntity.WarehouseId != warehouseItemEntity.WarehouseId)
+            {
+                itemEntity.WarehouseId = warehouseItemEntity.WarehouseId;
+            }
+            if(itemEntity.reserved != warehouseItemEntity.reserved)
+            {
+                itemEntity.reserved = warehouseItemEntity.reserved;
+            }
+            //warehouseContext.Entry(warehouseItemEntity).State = EntityState.Modified;
             await warehouseContext.SaveChangesAsync();
         }
-        
     }
     
     public async Task InsertItem(Guid tenantId, ItemEntity itemEntity)

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using WebApplication1.Database;
 using WebApplication1.Database.Entities;
 using WebApplication1.Interfaces;
@@ -59,7 +60,7 @@ public class ItemRepository : IItemRepository
             {
                 itemEntity.Name = warehouseItemEntity.Name;
             }
-            if (itemEntity.Description != warehouseItemEntity.Description)
+            if (!warehouseItemEntity.Description.IsNullOrEmpty() && itemEntity.Description != warehouseItemEntity.Description)
             {
                 itemEntity.Description = warehouseItemEntity.Description;
             }

@@ -68,7 +68,7 @@ public class WarehouseController : ControllerBase
     [HttpPost(Name = "InsertWarehouse")]
     [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.OK)]
-    public async Task<IActionResult> Insert([FromBody] WarehouseEntity warehouseEntity)
+    public async Task<IActionResult> Insert([FromBody] CostCenterDto warehouseEntity)
     {
         // nije potrebno ModelState.IsValid jer se automatski validira 
         try

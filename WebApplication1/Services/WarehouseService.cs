@@ -71,20 +71,24 @@ public class WarehouseService : IWarehouseService
     }
     
     
-    public async Task<CostCenterDto> InsertWarehouse(Guid tenantId, WarehouseEntity warehouseEntity)
+    public async Task<CostCenterDto> InsertWarehouse(Guid tenantId, CostCenterDto warehouseDto)
     {
-        if (warehouseEntity.Id != Guid.Empty)
+        if (warehouseDto.Id != Guid.Empty)
         {
-            if (!await _warehouseRepository.Exists(tenantId, warehouseEntity.Id))
+            if (!await _warehouseRepository.Exists(tenantId, warehouseDto.Id))
             {
                 throw new Exception("Warehouse already exists"); 
             }
         }
+
+        WarehouseEntity warehouseEntity = new WarehouseEntity(warehouseDto.Name, null, warehouseDto.PhoneNumber,
+            warehouseDto.Code, false, warehouseDto.DefaultLanguage, warehouseDto.IsPayoutLockedForOtherCostCenter,
+            tenantId);
         
         Guid warehouseId = await _warehouseRepository.InsertWarehouse(tenantId, warehouseEntity);
-        CostCenterDto warehouseDto = new CostCenterDto();
-        warehouseDto.Id = warehouseId;
-        return warehouseDto;
+        CostCenterDto returnDto = new CostCenterDto();
+        returnDto.Id = warehouseId;
+        return returnDto;
     }
     
     public async Task DeleteWarehouse(Guid tenantId, Guid id)
@@ -118,7 +122,7 @@ public class WarehouseService : IWarehouseService
             // potrebna je efikasnija implementacija - zbog ovog duze traje request
             Guid locationId = await _locationRepository.Add(tenantId, new LocationEntity(warehouse.Address, warehouse.City, warehouse.PostalCode));
             
-            warehouseEntities.Add(new WarehouseEntity(warehouse.Name, locationId, warehouse.PhoneNumber,
+            warehouseEntities.Add(new WarehouseEntity(warehouse.Id, warehouse.Name, locationId, warehouse.PhoneNumber,
                 warehouse.Code, warehouse.Deleted, warehouse.DefaultLanguage, warehouse.IsPayoutLockedForOtherCostCenter, tenantId));
 
         }
@@ -132,7 +136,7 @@ public interface IWarehouseService
 {
     Task<List<CostCenterDto>> GetWarehouses(Guid tenantId);
     Task<CostCenterDto> GetWarehouseById(Guid tenantId, Guid id);
-    Task<CostCenterDto> InsertWarehouse(Guid tenantId, WarehouseEntity warehouseEntity);
+    Task<CostCenterDto> InsertWarehouse(Guid tenantId, CostCenterDto warehouseEntity);
     Task DeleteWarehouse(Guid tenantId, Guid id);
     Task UpdateWarehouse(Guid tenantId, WarehouseUpdateClass warehouseEntity);
     

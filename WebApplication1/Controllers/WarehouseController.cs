@@ -1,26 +1,35 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using WebApplication1.Database;
+using Microsoft.AspNetCore.SignalR;
 using WebApplication1.Database.Entities;
-using WebApplication1.Repositories;
+using WebApplication1.Hubs;
+using WebApplication1.Interfaces;
+using WebApplication1.Models;
 using WebApplication1.Services;
+using X.Auth.Interface.Services;
+using X.Auth.Middleware.Attributes;
+using X.Retail.Shared.Models.Models.Dtos;
 
 namespace WebApplication1.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/public/[controller]/[action]")]
 public class WarehouseController : ControllerBase
 {
-    private readonly ILogger<WarehouseController> _logger; 
-    /*private readonly WarehouseContext _warehouseContext;*/
-    private IWarehouseService _warehouseService; 
-    public WarehouseController(ILogger<WarehouseController> logger, IWarehouseService warehouseService)
-    {
-        _logger = logger;
-        _warehouseService = warehouseService;
-    }
+    private readonly IWarehouseService _warehouseService;
+    private readonly IUserContextService _userContextService;
+    private readonly IRetailService _retailService;
+    private readonly IHubContext<NotificationHub> _hubContext;
 
+    public WarehouseController(IWarehouseService warehouseService, 
+        IUserContextService userContextService, IRetailService retailService, IHubContext<NotificationHub> hubContext)
+    {
+        _warehouseService = warehouseService;
+        _userContextService = userContextService;
+        _retailService = retailService;
+        _hubContext = hubContext;
+    }
+    
     [HttpGet(Name = "GetWarehouses")]
     [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.OK)]
@@ -28,7 +37,8 @@ public class WarehouseController : ControllerBase
     {
         try
         {
-            var warehouses =  await _warehouseService.GetWarehouses();
+            var warehouses =  await _warehouseService.GetWarehouses(_userContextService.UserContext.TenantId);
+            await _hubContext.Clients.All.SendAsync("ReceiveNotification", "Get Warehouses Request");
             return Ok(warehouses);
         }
         catch (Exception e)
@@ -40,11 +50,13 @@ public class WarehouseController : ControllerBase
     [HttpGet("id", Name = "GetWarehouseById")]
     [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.OK)]
-    public async Task<IActionResult> Get(Guid id)
+    public async Task<IActionResult> Get([FromQuery] Guid id)
     {
         try
         { 
-            var warehouse = await _warehouseService.GetWarehouseById(id);
+            var warehouse = await _warehouseService.GetWarehouseById(_userContextService.UserContext.TenantId, id);
+            await _hubContext.Clients.All.SendAsync("ReceiveNotification", "Get Warehouse By Id Request");
+
             return Ok(warehouse);
         }
         catch (Exception e)
@@ -52,17 +64,18 @@ public class WarehouseController : ControllerBase
             return BadRequest(e.Message);
         }
     }
-
+    
     [HttpPost(Name = "InsertWarehouse")]
     [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.OK)]
-    public async Task<IActionResult> Insert([FromBody] Warehouse warehouse)
+    public async Task<IActionResult> Insert([FromBody] WarehouseEntity warehouseEntity)
     {
-        //nije potrebno ModelState.IsValid jer se automatski validira 
+        // nije potrebno ModelState.IsValid jer se automatski validira 
         try
         {
-            await _warehouseService.InsertWarehouse(warehouse);
-            return Ok();
+            CostCenterDto warehouseDto = await _warehouseService.InsertWarehouse(_userContextService.UserContext.TenantId, warehouseEntity);
+            await _hubContext.Clients.All.SendAsync("ReceiveNotification", "Insert Warehouse Request");
+            return Ok(warehouseDto);
         }
         catch (Exception e)
         {
@@ -73,11 +86,12 @@ public class WarehouseController : ControllerBase
     [HttpDelete("id", Name = "DeleteWarehouse")]
     [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.OK)]
-    public async Task<IActionResult> Delete(Guid id)
+    public async Task<IActionResult> Delete([FromQuery] Guid id)
     {
         try
         {
-            await _warehouseService.DeleteWarehouse(id);
+            await _warehouseService.DeleteWarehouse(_userContextService.UserContext.TenantId, id);
+            await _hubContext.Clients.All.SendAsync("ReceiveNotification", "Delete Warehouse Request");
             return Ok();
         }
         catch (Exception e)
@@ -89,11 +103,31 @@ public class WarehouseController : ControllerBase
     [HttpPut(Name = "UpdateWarehouse")]
     [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.OK)]
-    public async Task<IActionResult> Update([FromBody] Warehouse warehouse)
+    public async Task<IActionResult> Update([FromBody] WarehouseUpdateClass warehouseEntity)
     {
         try
         {
-            await _warehouseService.UpdateWarehouse(warehouse);
+            await _warehouseService.UpdateWarehouse(_userContextService.UserContext.TenantId, warehouseEntity);
+            await _hubContext.Clients.All.SendAsync("ReceiveNotification", "Update Warehouse Request");
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
+    [VerifyGrants("backoffice")]
+    [HttpPost(Name = "FetchWarehouses")]
+    [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    public async Task<IActionResult> FetchWarehouses([FromQuery] string? name, [FromQuery] string? city)
+    {
+        try
+        {
+            var warehouses = await _retailService.FetchWarehouses(_userContextService.UserContext.TenantId, name, city);
+            await _warehouseService.InsertWarehouses(_userContextService.UserContext.TenantId, warehouses);   
+            await _hubContext.Clients.All.SendAsync("ReceiveNotification", "Fetch Warehouses Request");
             return Ok();
         }
         catch (Exception e)

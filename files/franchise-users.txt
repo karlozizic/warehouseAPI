@@ -1,0 +1,4 @@
+UserIds of Franchise Users
+JWT1 - Franchise User doesn't exist 895b43ca-2652-7443-fec7-a161ae76a8c0
+JWT2 - d0fd3019-d52b-afd4-9242-4495976308af
+JWT3 - db86fbe7-4037-c2d3-37ee-250d60aa48cf

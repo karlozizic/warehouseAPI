@@ -1,0 +1,1007 @@
+{
+	"info": {
+		"_postman_id": "ba97b4c2-1655-4e28-848e-c533048c01ec",
+		"name": "WarehouseAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28875174",
+		"_collection_link": "https://galactic-meadow-21807.postman.co/workspace/New-Team-Workspace~c20ad2d3-f0f8-472e-acab-e6b225fc2208/collection/28875174-ba97b4c2-1655-4e28-848e-c533048c01ec?action=share&source=collection_link&creator=28875174"
+	},
+	"item": [
+		{
+			"name": "RetailAPI - Request Examples",
+			"item": [
+				{
+					"name": "Get CostCentersInternal",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{JWT1}}",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://10.100.0.10:40839/api/CostCenter/GetCostCentersInternal",
+							"protocol": "http",
+							"host": [
+								"10",
+								"100",
+								"0",
+								"10"
+							],
+							"port": "40839",
+							"path": [
+								"api",
+								"CostCenter",
+								"GetCostCentersInternal"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get CostCenters",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250ZW50IjoidEZMdmE3aGVWV2F6VlBuVTFsQjNqZjhyNEF5Umo3MEdIU3N2WGUrUmpZaVlHUzVXNlVnVy9XUU14SFpkdi9TYzNBN0t2eCtFVDBaaUFPNkVOa1FzbitTOUtLb3pPMGlJTm9pUUhFL0hMRmcwOHVtT3NoTU4zWW5rNlVmZVZlb0hhM1Q1cnNKVmw0Q0dWanQ1aG92bVZnM1J0aHlZTWtQYUtyUldsZHpGZ0NxNVBuazFYYTg2TG5vbTd1ZXI5ZHZEcGkxQjJlYkNibkhsbFBHbEZPbm9ROGNIYUFlU3RUdjlobTA5by94dmc2MVl4Q2lMcUVScVJXUWVnL1pjSnJLanlCelVJeDR4MTBVKzJKQW13VUNqMVB6cDB0Zk96RlVsS2JGcHNvbWlLZ3FCS3BoLzBtNmFrMlpVQThpeUsxbFo5d3E4Z0h5TlhiNDJSblNrdldaK3VNeTN0ZHEvN2I3VUhCd2VTR1RhUTFZSDYrcExvUWJLRVB3SVdnVnBvd0QzYXRjOXpLZUFFYkx2Y09IazN3dzhaMGhvdndPbGdtUkI4VzNqNzNQSVFDbHJDRmwzU2hBSFFISjZHTnNaRGR4Z05SRUJybmd4b25PQ1NvZVhjNytyb0wwcVc2MFovSHNjUG1wb21UNURzZVBQVzU2ZUZtSEVGZ1lJejRGS2pKQlZqSTNYRVdCdmplZk42ZTVwQ0kyYmpEdnRHRkJKNnlta05RcGFiV0NFaVBTVnh0dk5Kc0RremFFdWNDdkJYWFN6NGp0ZmxocXBseTU0R2czZnlybzZycnN2WXFiMmFGa01sUVdsVW55NkpsVENMQzN1V3JGTDdSWnBwTVhTdzJHMnFabFdMOHYrdzIwQWduWU5oc2NPWHEwbDVJT0tTQjZKcGRXM0NtMDNGRDVjR1JLVUYwbVo5WGZySnpoM2Z4VFpZM3ZJb3BYSENKaU82NlUvamtYV2pCUVFDcTJFcnpSQjZSWmRXU2N4UmJhUWJqbFVOZW9adHZqcWgxRGFPa0d3MDc2Wjh1L1dDK2d0TFh1cmhGUmdpY1BkMHFPQ2p2YUY1MjZXUWZPUHArUzc1RGF0TkVWUnhrU0gvdU1TNGlhMjJpNnVEZ2NrN2drRkFnQ3BvV3ozb3JZNU5TOU91OXhhbDVvSllBNGk3U2ZKY001Tyt3R1pGdmNzeHczYlA1NlIySnJKVm5WcktieEtBTHdXN0JXU1hHVEZZYWJEdWNSTU83bDlWSFErZnVmb1c3c2lkdmIrdEJzZjdldmswaDc5NXpYV3pCclpUWHNoeWk5cHZxeEEzR2s1T0NIcGUxci9mSnJ1VUVLTUN0RjFiUTByVlJhQVVIZ3NNUFV3Z3FmdVgrNXh4LzNOYi8rZHAzYi9wWjBNZmN4YXd6RW9VdHk1SnlKYjhTVWFzYTB0VTJEczAwVGdWSkpGTUEvZmFJSVhObUtqeHE0V3NmL0kzL3ZFU3dSQjRCMis2Z2VwcTYzdENFZ1Z2MFVzUVljPSIsInRpZCI6IjY3OWE1YWM5LWQ1ZGEtNGM5ZS05ZGQyLWRjZjJlYjA3Y2RiYyIsImlkIjoiYWYyYTQ4ODUtY2M2ZC00MmRhLTg5YWMtNjdjNTZlNDFjNjJjIiwiZXhwIjoxNjgxMjA0MDkxLCJpYXQiOjE2ODEyMDIyODYsImlzcyI6Imh0dHBzOi8vYXV0aG9yaXphdGlvbi5zdGFnZS12b2xjYW5vLmNvbSJ9.UME4SBSja0ll8nOiQVt9qhD9KVVGJDcZRd5gToO87ME",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{JWT1}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://10.100.0.10:40839/api/public/CostCenter/GetCostCenters",
+							"protocol": "http",
+							"host": [
+								"10",
+								"100",
+								"0",
+								"10"
+							],
+							"port": "40839",
+							"path": [
+								"api",
+								"public",
+								"CostCenter",
+								"GetCostCenters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Users",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{JWT1}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://10.100.0.10:37423/api/public/Users/GetUsers",
+							"protocol": "http",
+							"host": [
+								"10",
+								"100",
+								"0",
+								"10"
+							],
+							"port": "37423",
+							"path": [
+								"api",
+								"public",
+								"Users",
+								"GetUsers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get FranchiseUsers",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "tenantId",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://10.100.0.10:40839/api/FranchiseUser/Users",
+							"protocol": "http",
+							"host": [
+								"10",
+								"100",
+								"0",
+								"10"
+							],
+							"port": "40839",
+							"path": [
+								"api",
+								"FranchiseUser",
+								"Users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Fetch From Retail",
+			"item": [
+				{
+					"name": "Fetch Retail Warehouses",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250ZW50IjoidEZMdmE3aGVWV2F6VlBuVTFsQjNqZjhyNEF5Umo3MEdIU3N2WGUrUmpZaVlHUzVXNlVnVy9XUU14SFpkdi9TYzNBN0t2eCtFVDBaaUFPNkVOa1FzbitTOUtLb3pPMGlJTm9pUUhFL0hMRmcwOHVtT3NoTU4zWW5rNlVmZVZlb0hhM1Q1cnNKVmw0Q0dWanQ1aG92bVZnM1J0aHlZTWtQYUtyUldsZHpGZ0NxNVBuazFYYTg2TG5vbTd1ZXI5ZHZEcGkxQjJlYkNibkhsbFBHbEZPbm9ROGNIYUFlU3RUdjlobTA5by94dmc2MVl4Q2lMcUVScVJXUWVnL1pjSnJLanlCelVJeDR4MTBVKzJKQW13VUNqMVB6cDB0Zk96RlVsS2JGcHNvbWlLZ3FCS3BoLzBtNmFrMlpVQThpeUsxbFo5d3E4Z0h5TlhiNDJSblNrdldaK3VNeTN0ZHEvN2I3VUhCd2VTR1RhUTFZSDYrcExvUWJLRVB3SVdnVnBvd0QzYXRjOXpLZUFFYkx2Y09IazN3dzhaMGhvdndPbGdtUkI4VzNqNzNQSVFDbHJDRmwzU2hBSFFISjZHTnNaRGR4Z05SRUJybmd4b25PQ1NvZVhjNytyb0wwcVc2MFovSHNjUG1wb21UNURzZVBQVzU2ZUZtSEVGZ1lJejRGS2pKQlZqSTNYRVdCdmplZk42ZTVwQ0kyYmpEdnRHRkJKNnlta05RcGFiV0NFaVBTVnh0dk5Kc0RremFFdWNDdkJYWFN6NGp0ZmxocXBseTU0R2czZnlybzZycnN2WXFiMmFGa01sUVdsVW55NkpsVENMQzN1V3JGTDdSWnBwTVhTdzJHMnFabFdMOHYrdzIwQWduWU5oc2NPWHEwbDVJT0tTQjZKcGRXM0NtMDNGRDVjR1JLVUYwbVo5WGZySnpoM2Z4VFpZM3ZJb3BYSENKaU82NlUvamtYV2pCUVFDcTJFcnpSQjZSWmRXU2N4UmJhUWJqbFVOZW9adHZqcWgxRGFPa0d3MDc2Wjh1L1dDK2d0TFh1cmhGUmdpY1BkMHFPQ2p2YUY1MjZXUWZPUHArUzc1RGF0TkVWUnhrU0gvdU1TNGlhMjJpNnVEZ2NrN2drRkFnQ3BvV3ozb3JZNU5TOU91OXhhbDVvSllBNGk3U2ZKY001Tyt3R1pGdmNzeHczYlA1NlIySnJKVm5WcktieEtBTHdXN0JXU1hHVEZZYWJEdWNSTU83bDlWSFErZnVmb1c3c2lkdmIrdEJzZjdldmswaDc5NXpYV3pCclpUWHNoeWk5cHZxeEEzR2s1T0NIcGUxci9mSnJ1VUVLTUN0RjFiUTByVlJhQVVIZ3NNUFV3Z3FmdVgrNXh4LzNOYi8rZHAzYi9wWjBNZmN4YXd6RW9VdHk1SnlKYjhTVWFzYTB0VTJEczAwVGdWSkpGTUEvZmFJSVhObUtqeHE0V3NmL0kzL3ZFU3dSQjRCMis2Z2VwcTYzdENFZ1Z2MFVzUVljPSIsInRpZCI6IjY3OWE1YWM5LWQ1ZGEtNGM5ZS05ZGQyLWRjZjJlYjA3Y2RiYyIsImlkIjoiYWYyYTQ4ODUtY2M2ZC00MmRhLTg5YWMtNjdjNTZlNDFjNjJjIiwiZXhwIjoxNjgxMjA0MDkxLCJpYXQiOjE2ODEyMDIyODYsImlzcyI6Imh0dHBzOi8vYXV0aG9yaXphdGlvbi5zdGFnZS12b2xjYW5vLmNvbSJ9.UME4SBSja0ll8nOiQVt9qhD9KVVGJDcZRd5gToO87ME",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"warning": "This is a duplicate header and will be overridden by the Authorization header generated by Postman.",
+								"key": "Authorization",
+								"value": "Bearer {{JWT1}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local}}/api/public/Warehouse/FetchWarehouses",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"public",
+								"Warehouse",
+								"FetchWarehouses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch Retail FranchiseUsers",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250ZW50IjoidEZMdmE3aGVWV2F6VlBuVTFsQjNqZjhyNEF5Umo3MEdIU3N2WGUrUmpZaVlHUzVXNlVnVy9XUU14SFpkdi9TYzNBN0t2eCtFVDBaaUFPNkVOa1FzbitTOUtLb3pPMGlJTm9pUUhFL0hMRmcwOHVtT3NoTU4zWW5rNlVmZVZlb0hhM1Q1cnNKVmw0Q0dWanQ1aG92bVZnM1J0aHlZTWtQYUtyUldsZHpGZ0NxNVBuazFYYTg2TG5vbTd1ZXI5ZHZEcGkxQjJlYkNibkhsbFBHbEZPbm9ROGNIYUFlU3RUdjlobTA5by94dmc2MVl4Q2lMcUVScVJXUWVnL1pjSnJLanlCelVJeDR4MTBVKzJKQW13VUNqMVB6cDB0Zk96RlVsS2JGcHNvbWlLZ3FCS3BoLzBtNmFrMlpVQThpeUsxbFo5d3E4Z0h5TlhiNDJSblNrdldaK3VNeTN0ZHEvN2I3VUhCd2VTR1RhUTFZSDYrcExvUWJLRVB3SVdnVnBvd0QzYXRjOXpLZUFFYkx2Y09IazN3dzhaMGhvdndPbGdtUkI4VzNqNzNQSVFDbHJDRmwzU2hBSFFISjZHTnNaRGR4Z05SRUJybmd4b25PQ1NvZVhjNytyb0wwcVc2MFovSHNjUG1wb21UNURzZVBQVzU2ZUZtSEVGZ1lJejRGS2pKQlZqSTNYRVdCdmplZk42ZTVwQ0kyYmpEdnRHRkJKNnlta05RcGFiV0NFaVBTVnh0dk5Kc0RremFFdWNDdkJYWFN6NGp0ZmxocXBseTU0R2czZnlybzZycnN2WXFiMmFGa01sUVdsVW55NkpsVENMQzN1V3JGTDdSWnBwTVhTdzJHMnFabFdMOHYrdzIwQWduWU5oc2NPWHEwbDVJT0tTQjZKcGRXM0NtMDNGRDVjR1JLVUYwbVo5WGZySnpoM2Z4VFpZM3ZJb3BYSENKaU82NlUvamtYV2pCUVFDcTJFcnpSQjZSWmRXU2N4UmJhUWJqbFVOZW9adHZqcWgxRGFPa0d3MDc2Wjh1L1dDK2d0TFh1cmhGUmdpY1BkMHFPQ2p2YUY1MjZXUWZPUHArUzc1RGF0TkVWUnhrU0gvdU1TNGlhMjJpNnVEZ2NrN2drRkFnQ3BvV3ozb3JZNU5TOU91OXhhbDVvSllBNGk3U2ZKY001Tyt3R1pGdmNzeHczYlA1NlIySnJKVm5WcktieEtBTHdXN0JXU1hHVEZZYWJEdWNSTU83bDlWSFErZnVmb1c3c2lkdmIrdEJzZjdldmswaDc5NXpYV3pCclpUWHNoeWk5cHZxeEEzR2s1T0NIcGUxci9mSnJ1VUVLTUN0RjFiUTByVlJhQVVIZ3NNUFV3Z3FmdVgrNXh4LzNOYi8rZHAzYi9wWjBNZmN4YXd6RW9VdHk1SnlKYjhTVWFzYTB0VTJEczAwVGdWSkpGTUEvZmFJSVhObUtqeHE0V3NmL0kzL3ZFU3dSQjRCMis2Z2VwcTYzdENFZ1Z2MFVzUVljPSIsInRpZCI6IjY3OWE1YWM5LWQ1ZGEtNGM5ZS05ZGQyLWRjZjJlYjA3Y2RiYyIsImlkIjoiYWYyYTQ4ODUtY2M2ZC00MmRhLTg5YWMtNjdjNTZlNDFjNjJjIiwiZXhwIjoxNjgxMjA0MDkxLCJpYXQiOjE2ODEyMDIyODYsImlzcyI6Imh0dHBzOi8vYXV0aG9yaXphdGlvbi5zdGFnZS12b2xjYW5vLmNvbSJ9.UME4SBSja0ll8nOiQVt9qhD9KVVGJDcZRd5gToO87ME",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"warning": "This is a duplicate header and will be overridden by the Authorization header generated by Postman.",
+								"key": "Authorization",
+								"value": "Bearer {{JWT1}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local}}/api/public/FranchiseUser/FetchFranchiseUsers",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"public",
+								"FranchiseUser",
+								"FetchFranchiseUsers"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Warehouse",
+			"item": [
+				{
+					"name": "Fetch Warehouses",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{JWT2}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/api/public/Warehouse/Get",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"public",
+								"Warehouse",
+								"Get"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch Warehouse by Id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{JWT1}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local}}/api/public/Warehouse/Get/id?id=0019eadc-6f76-49e0-9217-17b313433a26",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"public",
+								"Warehouse",
+								"Get",
+								"id"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "0019eadc-6f76-49e0-9217-17b313433a26"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Warehouse by Id",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{JWT1}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local}}/api/public/Warehouse/Delete/id?id=0018a6bb-1d0d-42d6-9c5d-7604f2b5d93d",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"public",
+								"Warehouse",
+								"Delete",
+								"id"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "0018a6bb-1d0d-42d6-9c5d-7604f2b5d93d"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Warehouse Update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{JWT1}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"06da41b4-172d-4d35-83b3-cd99cba3e69e\",\r\n    \"name\": \"PoslovnicaCentar47002\",\r\n    \"locationId\": \"1cd7cce3-e581-4fbe-a775-93973fa8a385\",\r\n    \"location\": null,\r\n    \"phoneNumber\": \"1561616\",\r\n    \"code\": \"22653\",\r\n    \"deleted\": true,\r\n    \"defaultLanguage\": null,\r\n    \"isPayoutLockedForOtherCostCenter\": false,\r\n    \"tenantId\": \"00000000-0000-0000-0000-000000000000\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/api/public/Warehouse/Update",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"public",
+								"Warehouse",
+								"Update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Insert Warehouse",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{JWT1}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"PoslovnicaCentar26613\",\r\n    \"locationId\": \"8c8a8c36-e05e-4cf0-8371-a8b22b44d60d\",\r\n    \"location\": null,\r\n    \"phoneNumber\": \"1561616\",\r\n    \"code\": \"47138\",\r\n    \"deleted\": false,\r\n    \"defaultLanguage\": null,\r\n    \"isPayoutLockedForOtherCostCenter\": false,\r\n    \"tenantId\": \"00000000-0000-0000-0000-000000000000\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/api/public/Warehouse/Insert",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"public",
+								"Warehouse",
+								"Insert"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Locations",
+			"item": [
+				{
+					"name": "Get All Locations",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{JWT1}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local}}/api/public/Location/Get",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"public",
+								"Location",
+								"Get"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Item",
+			"item": [
+				{
+					"name": "Fetch Item By Id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{JWT1}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local}}/api/public/Item/GetItem?id=0020fd9b-9b29-4e97-aa92-a8600dc834c4",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"public",
+								"Item",
+								"GetItem"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "0020fd9b-9b29-4e97-aa92-a8600dc834c4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch Items by Warehouse",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{JWT1}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local}}/api/public/Item/GetWarehouseItems?warehouseId=000ca9fc-2666-4f17-a44c-f39313e52194",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"public",
+								"Item",
+								"GetWarehouseItems"
+							],
+							"query": [
+								{
+									"key": "warehouseId",
+									"value": "000ca9fc-2666-4f17-a44c-f39313e52194"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch Items by Warehouse, Filter by name",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{JWT1}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local}}/api/public/Item/GetWarehouseItems?warehouseId=000ca9fc-2666-4f17-a44c-f39313e52194&name=Samsung TV",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"public",
+								"Item",
+								"GetWarehouseItems"
+							],
+							"query": [
+								{
+									"key": "warehouseId",
+									"value": "000ca9fc-2666-4f17-a44c-f39313e52194"
+								},
+								{
+									"key": "name",
+									"value": "Samsung TV"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Item",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{JWT1}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"0020fd9b-9b29-4e97-aa92-a8600dc834c4\",\r\n    \"name\": \"Samsung TV\",\r\n    \"description\": \"description example update\",\r\n    \"deleted\": false,\r\n    \"warehouseId\": \"000ca9fc-2666-4f17-a44c-f39313e52194\",\r\n    \"reserved\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/api/public/Item/UpdateWarehouseItem",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"public",
+								"Item",
+								"UpdateWarehouseItem"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reserve Item By Operator",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer{{JWT2}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local}}/api/public/Item/ReserveWarehouseItem?itemId=0020fd9b-9b29-4e97-aa92-a8600dc834c4",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"public",
+								"Item",
+								"ReserveWarehouseItem"
+							],
+							"query": [
+								{
+									"key": "itemId",
+									"value": "0020fd9b-9b29-4e97-aa92-a8600dc834c4"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Franchise User",
+			"item": [
+				{
+					"name": "Get FranchiseUser by Id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{JWT1}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local}}/api/public/FranchiseUser/FetchFranchiseUserById?franchiseUserId=d0fd3019-d52b-afd4-9242-4495976308af",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"public",
+								"FranchiseUser",
+								"FetchFranchiseUserById"
+							],
+							"query": [
+								{
+									"key": "franchiseUserId",
+									"value": "d0fd3019-d52b-afd4-9242-4495976308af"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Assign Operator",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{JWT1}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local}}/api/public/FranchiseUser/AssignOperator?franchiseUserId=d0fd3019-d52b-afd4-9242-4495976308af&warehouseId=0019eadc-6f76-49e0-9217-17b313433a26",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"public",
+								"FranchiseUser",
+								"AssignOperator"
+							],
+							"query": [
+								{
+									"key": "franchiseUserId",
+									"value": "d0fd3019-d52b-afd4-9242-4495976308af"
+								},
+								{
+									"key": "warehouseId",
+									"value": "0019eadc-6f76-49e0-9217-17b313433a26"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Assign Operator Copy",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{JWT1}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local}}/api/public/FranchiseUser/AssignOperator?franchiseUserId=db86fbe7-4037-c2d3-37ee-250d60aa48cf&warehouseId=001f3a0f-f303-45ee-b2f5-df4b36147c8e",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"public",
+								"FranchiseUser",
+								"AssignOperator"
+							],
+							"query": [
+								{
+									"key": "franchiseUserId",
+									"value": "db86fbe7-4037-c2d3-37ee-250d60aa48cf"
+								},
+								{
+									"key": "warehouseId",
+									"value": "001f3a0f-f303-45ee-b2f5-df4b36147c8e"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch FranchiseUsers",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{JWT1}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local}}/api/public/FranchiseUser/FetchFranchiseUsers",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"public",
+								"FranchiseUser",
+								"FetchFranchiseUsers"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Item Request",
+			"item": [
+				{
+					"name": "Create ItemRequest",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{JWT3}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"ItemId\": \"0020fd9b-9b29-4e97-aa92-a8600dc834c6\",\r\n    \"ItemName\": \"Xiaomi TV\",\r\n    \"ItemDescription\": \"description example\",\r\n    \"RequestedWarehouseId\": \"0019eadc-6f76-49e0-9217-17b313433a26\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/api/public/ItemRequest/Create",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"public",
+								"ItemRequest",
+								"Create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create ItemRequest Copy",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{JWT3}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"ItemId\": \"0020fd9b-9b29-4e97-aa92-a8600dc834c4\",\r\n    \"ItemName\": \"Samsung TV\",\r\n    \"ItemDescription\": \"description example\",\r\n    \"CurrentWarehouseId\": \"001478a2-bb56-4f7f-a512-1c6e8329917a\",\r\n    \"RequestedWarehouseId\": \"0019eadc-6f76-49e0-9217-17b313433a26\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/api/public/ItemRequest/Create",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"public",
+								"ItemRequest",
+								"Create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update ItemRequest",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{JWT2}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local}}/api/public/ItemRequest/Update?itemRequestId=9de593e2-18c4-4fea-bc62-e22c111f4105&itemStatus=ApprovedForEntering",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"public",
+								"ItemRequest",
+								"Update"
+							],
+							"query": [
+								{
+									"key": "itemRequestId",
+									"value": "9de593e2-18c4-4fea-bc62-e22c111f4105"
+								},
+								{
+									"key": "itemStatus",
+									"value": "ApprovedForEntering"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update ItemRequest Copy",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{JWT2}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local}}/api/public/ItemRequest/Update?itemRequestId=cc72eb5e-d101-4df3-abc0-f6d3060499da&itemStatus=ApprovedForLeaving",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"public",
+								"ItemRequest",
+								"Update"
+							],
+							"query": [
+								{
+									"key": "itemRequestId",
+									"value": "cc72eb5e-d101-4df3-abc0-f6d3060499da"
+								},
+								{
+									"key": "itemStatus",
+									"value": "ApprovedForLeaving"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update ItemRequest Copy 2",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{JWT2}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local}}/api/public/ItemRequest/Update?itemRequestId=d647cd62-e8ae-413b-b635-7c024a483124&itemStatus=ApprovedForLeaving",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"public",
+								"ItemRequest",
+								"Update"
+							],
+							"query": [
+								{
+									"key": "itemRequestId",
+									"value": "d647cd62-e8ae-413b-b635-7c024a483124"
+								},
+								{
+									"key": "itemStatus",
+									"value": "ApprovedForLeaving"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Item Request",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{JWT1}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local}}/api/public/ItemRequest/Delete?itemRequestId=30dbea9e-5b47-443f-a357-a1035c20d583",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"public",
+								"ItemRequest",
+								"Delete"
+							],
+							"query": [
+								{
+									"key": "itemRequestId",
+									"value": "30dbea9e-5b47-443f-a357-a1035c20d583"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

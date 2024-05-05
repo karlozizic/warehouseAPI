@@ -5,8 +5,6 @@ using WebApplication1.Enums;
 using WebApplication1.Hubs;
 using WebApplication1.Models;
 using WebApplication1.Services;
-using X.Auth.Interface.Services;
-using X.Auth.Middleware.Attributes;
 
 namespace WebApplication1.Controllers;
 
@@ -16,25 +14,23 @@ namespace WebApplication1.Controllers;
 public class ItemRequestController : ControllerBase
 {
     private readonly IItemRequestService _itemRequestService;
-    private readonly IUserContextService _userContextService;
     private readonly IHubContext<NotificationHub> _hubContext;
     
-    public ItemRequestController(IItemRequestService itemRequestService, IUserContextService userContextService,
+    public ItemRequestController(IItemRequestService itemRequestService,
         IHubContext<NotificationHub> hubContext)
     {
         _itemRequestService = itemRequestService;
-        _userContextService = userContextService;
         _hubContext = hubContext;
     }
     
     [HttpGet(Name = "GetItemRequests")]
     [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.OK)]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> Get([FromQuery] Guid tenantId)
     {
         try
         {
-            var itemRequests =  await _itemRequestService.GetItemRequests(_userContextService.UserContext.TenantId);
+            var itemRequests =  await _itemRequestService.GetItemRequests(tenantId);
             await _hubContext.Clients.All.SendAsync("ReceiveNotification", "Get ItemRequests");
             return Ok(itemRequests);
         }
@@ -47,11 +43,12 @@ public class ItemRequestController : ControllerBase
     [HttpGet("id", Name = "GetItemRequestById")]
     [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.OK)]
-    public async Task<IActionResult> GetById([FromQuery] Guid id)
+    public async Task<IActionResult> GetById([FromQuery] Guid id,
+        [FromQuery] Guid tenantId)
     {
         try
         { 
-            var itemRequest = await _itemRequestService.GetItemRequestById(_userContextService.UserContext.TenantId, id);
+            var itemRequest = await _itemRequestService.GetItemRequestById(tenantId, id);
             await _hubContext.Clients.All.SendAsync("ReceiveNotification", "Get ItemRequest By Id");
             return Ok(itemRequest);
         }
@@ -61,7 +58,6 @@ public class ItemRequestController : ControllerBase
         }
     }
     
-    [VerifyGrants("backoffice")]
     [HttpPost(Name = "CreateItemRequest")]
     [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.OK)]
@@ -70,8 +66,7 @@ public class ItemRequestController : ControllerBase
         try
         {   
             //operatorId se saznaje iz _userContextService
-            Guid operatorId = _userContextService.UserContext.UserId; 
-            await _itemRequestService.CreateItemRequest(_userContextService.UserContext.TenantId, itemRequest, operatorId);
+            await _itemRequestService.CreateItemRequest(itemRequest);
             await _hubContext.Clients.All.SendAsync("ReceiveNotification", "Create ItemRequest");
             return Ok();
         }
@@ -81,17 +76,18 @@ public class ItemRequestController : ControllerBase
         }
     }
     
-    [VerifyGrants("backoffice")]
     [HttpPut(Name = "ItemRequestUpdate")]
     [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.OK)]
-    public async Task<IActionResult> Update([FromQuery] Guid itemRequestId, [FromQuery] String itemStatus)
+    public async Task<IActionResult> Update([FromQuery] Guid tenantId,
+        [FromQuery] Guid operatorId, 
+        [FromQuery] Guid itemRequestId,
+        [FromQuery] String itemStatus)
     {
         try
         {   
-            Guid operatorId = _userContextService.UserContext.UserId;
             ItemRequestEnum status = (ItemRequestEnum) Enum.Parse(typeof(ItemRequestEnum), itemStatus);
-            await _itemRequestService.UpdateItemRequest(_userContextService.UserContext.TenantId, itemRequestId, status, operatorId);
+            await _itemRequestService.UpdateItemRequest(tenantId, itemRequestId, status, operatorId);
             await _hubContext.Clients.All.SendAsync("ReceiveNotification", "Get ItemRequests");
             return Ok();
         }
@@ -101,15 +97,14 @@ public class ItemRequestController : ControllerBase
         }
     }
     
-    [VerifyGrants("backoffice")]
     [HttpDelete(Name = "DeleteItemRequest")]
     [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.OK)]
-    public async Task<IActionResult> Delete([FromQuery] Guid itemRequestId)
+    public async Task<IActionResult> Delete([FromQuery] Guid tenantId, [FromQuery] Guid itemRequestId)
     {
         try
         {   
-            await _itemRequestService.DeleteItemRequest(_userContextService.UserContext.TenantId, itemRequestId);
+            await _itemRequestService.DeleteItemRequest(tenantId, itemRequestId);
             await _hubContext.Clients.All.SendAsync("ReceiveNotification", "Delete ItemRequest");
             return Ok();
         }

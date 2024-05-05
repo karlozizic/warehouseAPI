@@ -37,10 +37,10 @@ public class ItemRequestService : IItemRequestService
         return await _itemRequestRepository.GetItemRequestById(tenantId, id);
     }
 
-    public async Task CreateItemRequest(Guid tenantId, ItemRequestDto itemRequestDto, Guid operatorId)
+    public async Task CreateItemRequest(ItemRequestDto itemRequestDto)
     {
         ItemRequestEntity itemRequestEntity = new ItemRequestEntity(itemRequestDto.ItemId, itemRequestDto.ItemName,
-            itemRequestDto.ItemDescription, operatorId, itemRequestDto.CurrentWarehouseId, itemRequestDto.RequestedWarehouseId);
+            itemRequestDto.ItemDescription, itemRequestDto.OperatorId, itemRequestDto.CurrentWarehouseId, itemRequestDto.RequestedWarehouseId);
         
         // item nije trenutno u drugom warehouseu
         if (itemRequestDto.CurrentWarehouseId == null)
@@ -52,7 +52,7 @@ public class ItemRequestService : IItemRequestService
             itemRequestEntity.Status = ItemRequestEnum.Requested;
         }
 
-        await _itemRequestRepository.InsertItemRequest(tenantId, itemRequestEntity); 
+        await _itemRequestRepository.InsertItemRequest(itemRequestDto.TenantId, itemRequestEntity); 
     }
 
     public async Task UpdateItemRequest(Guid tenantId, Guid itemRequestId, ItemRequestEnum itemRequestStatus, Guid operatorId)
@@ -150,7 +150,7 @@ public interface IItemRequestService
 {
     public Task<List<ItemRequestEntity>> GetItemRequests(Guid tenantId);
     public Task<ItemRequestEntity> GetItemRequestById(Guid tenantId, Guid id);
-    public Task CreateItemRequest(Guid tenantId, ItemRequestDto itemRequestEntity, Guid operatorId);
+    public Task CreateItemRequest(ItemRequestDto itemRequestEntity);
     public Task UpdateItemRequest(Guid tenantId, Guid id, ItemRequestEnum itemRequestDto, Guid operatorId);
     public Task DeleteItemRequest(Guid tenantId, Guid id);
 }

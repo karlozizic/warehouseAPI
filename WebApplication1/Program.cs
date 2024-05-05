@@ -1,25 +1,18 @@
 using System.Net;
-using System.Text;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using WebApplication1.Database;
 using WebApplication1.Hubs;
 using WebApplication1.Interfaces;
 using WebApplication1.Models;
 using WebApplication1.Repositories;
 using WebApplication1.Services;
-using X.Auth.Middleware.Extensions;
-using X.Consul.Helpers;
-using X.LogMiddleware.Extensions;
-using X.PortUtility;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var bindingConfig = new ConfigurationBuilder().AddCommandLine(args).Build();
 
-var port = bindingConfig.GetValue<int?>("port") ?? FreePorts.Find();
+var port = bindingConfig.GetValue<int?>("port") ?? 8000;
 // sljedeci kod se inace ne konfigurira unutar Program.cs
 builder.Services.AddCors();
 //
@@ -55,7 +48,7 @@ builder.Services.AddScoped<ILocationRepository, LocationRepository>();
 builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Services.AddScoped<IItemRepository, ItemRepository>();
 builder.Services.AddScoped<IItemService, ItemService>();
-builder.Services.AddScoped<IRetailService, RetailService>();
+/*builder.Services.AddScoped<IRetailService, RetailService>();*/
 builder.Services.AddScoped<IFranchiseUserRepository, FranchiseUserRepository>();
 builder.Services.AddScoped<IFranchiseUserService, FranchiseUserService>();
 builder.Services.AddScoped<IItemRequestRepository, ItemRequestRepository>();
@@ -63,12 +56,6 @@ builder.Services.AddScoped<IItemRequestService, ItemRequestService>();
 
 builder.Services.AddScoped<IContextService, ContextService>();
 
-//
-builder.Services.AddLogWriter(builder.Configuration);
-builder.Services.AddAuthMiddleware(builder.Configuration);
-builder.Services.AddRequestService();
-builder.Services.AddConsul(builder.Configuration);
-//
 
 builder.Services.AddAuthentication(options =>
 {
@@ -97,7 +84,6 @@ if (app.Environment.IsDevelopment())
 }   
 
 app.UseRouting();
-app.UseRefreshAuthMiddleware();
 app.UseAuthorization();
 app.MapControllers();
 app.UseAuthentication();

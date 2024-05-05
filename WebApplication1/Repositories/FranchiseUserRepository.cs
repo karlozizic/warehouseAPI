@@ -24,6 +24,15 @@ public class FranchiseUserRepository : IFranchiseUserRepository
             await warehouseContext.SaveChangesAsync();
         }
     }
+
+    public async Task InsertFranchiseUser(FranchiseUserEntity franchiseUserEntity)
+    {
+        using (var warehouseContext = _contextService.CreateDbContext(franchiseUserEntity.TenantId))
+        {
+            var franchiseUser = await warehouseContext.FranchiseUser.AddAsync(franchiseUserEntity);
+            await warehouseContext.SaveChangesAsync();
+        }
+    }
     
     public async Task<bool> Exists(Guid tenantId, Guid userId)
     {

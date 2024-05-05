@@ -7,6 +7,8 @@ public interface IFranchiseUserRepository
 {
     public Task InsertAllFranchiseUsers(Guid tenantId, List<FranchiseUserEntity> franchiseUserEntities);
 
+    public Task InsertFranchiseUser(FranchiseUserEntity franchiseUser);
+    
     public Task<bool> Exists(Guid tenantId, Guid userId);
     
     public Task<FranchiseUserEntity> GetFranchiseUserById(Guid tenantId, Guid userId);

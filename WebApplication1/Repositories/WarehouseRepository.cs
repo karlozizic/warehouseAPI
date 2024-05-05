@@ -1,10 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using WebApplication1.Database.Entities;
-using WebApplication1.Interfaces;
 using WebApplication1.Models;
 using WebApplication1.Services;
-using X.Auth.Interface.Services;
 
 namespace WebApplication1.Repositories;
 
@@ -131,26 +129,6 @@ public class WarehouseRepository : IWarehouseRepository
         }
     }
 
-    // https://learn.microsoft.com/en-us/aspnet/mvc/overview/older-versions/getting-started-with-ef-5-using-mvc-4/implementing-the-repository-and-unit-of-work-patterns-in-an-asp-net-mvc-application
-    // Implementacija IDisposable interface-a 
-    /*private bool disposed = false;
-    protected virtual void Dispose(bool disposing)
-    {
-        if (!this.disposed)
-        {
-            if (disposing)
-            {
-                _warehouseContext.Dispose();
-            }
-        }
-        this.disposed = true;
-    }
-
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }*/
 }
 
 public interface IWarehouseRepository

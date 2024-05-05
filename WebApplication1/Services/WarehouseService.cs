@@ -2,7 +2,6 @@
 using WebApplication1.Interfaces;
 using WebApplication1.Models;
 using WebApplication1.Repositories;
-using CostCenterDto = X.Retail.Shared.Models.Models.Dtos.CostCenterDto;
 
 namespace WebApplication1.Services;
 
@@ -18,13 +17,13 @@ public class WarehouseService : IWarehouseService
         _locationRepository = locationRepository;
     }
     
-    public async Task<List<CostCenterDto>> GetWarehouses(Guid tenantId)
+    public async Task<List<WarehouseDto>> GetWarehouses(Guid tenantId)
     {
         List<WarehouseEntity> warehouses = await _warehouseRepository.GetWarehouses(tenantId);
-        List<CostCenterDto> warehouseDtos = new List<CostCenterDto>();
+        List<WarehouseDto> warehouseDtos = new List<WarehouseDto>();
         foreach (var warehouse in warehouses)
         {
-            CostCenterDto warehouseDto = new CostCenterDto()
+            WarehouseDto warehouseDto = new WarehouseDto()
             {
                 Id = warehouse.Id,
                 Name = warehouse.Name,
@@ -44,7 +43,7 @@ public class WarehouseService : IWarehouseService
         return warehouseDtos; 
     }
     
-    public async Task<CostCenterDto> GetWarehouseById(Guid tenantId, Guid id)
+    public async Task<WarehouseDto> GetWarehouseById(Guid tenantId, Guid id)
     {
         if (!await _warehouseRepository.Exists(tenantId, id))
         {
@@ -52,7 +51,7 @@ public class WarehouseService : IWarehouseService
         }
         
         WarehouseEntity? warehouseEntity = await _warehouseRepository.GetWarehouseById(tenantId, id);
-        CostCenterDto warehouseDto = new CostCenterDto()
+        WarehouseDto warehouseDto = new WarehouseDto()
         {
             Id = warehouseEntity.Id,
             Name = warehouseEntity.Name,
@@ -71,7 +70,7 @@ public class WarehouseService : IWarehouseService
     }
     
     
-    public async Task<CostCenterDto> InsertWarehouse(Guid tenantId, CostCenterDto warehouseDto)
+    public async Task<WarehouseDto> InsertWarehouse(Guid tenantId, WarehouseDto warehouseDto)
     {
         if (warehouseDto.Id != Guid.Empty)
         {
@@ -86,7 +85,7 @@ public class WarehouseService : IWarehouseService
             tenantId);
         
         Guid warehouseId = await _warehouseRepository.InsertWarehouse(tenantId, warehouseEntity);
-        CostCenterDto returnDto = new CostCenterDto();
+        WarehouseDto returnDto = new WarehouseDto();
         returnDto.Id = warehouseId;
         return returnDto;
     }
@@ -113,7 +112,7 @@ public class WarehouseService : IWarehouseService
         
     }
 
-    public async Task InsertWarehouses(Guid tenantId, List<CostCenterDto> warehouses)
+    public async Task InsertWarehouses(Guid tenantId, List<WarehouseDto> warehouses)
     {
         List<WarehouseEntity> warehouseEntities = new List<WarehouseEntity>();
 
@@ -134,9 +133,9 @@ public class WarehouseService : IWarehouseService
 
 public interface IWarehouseService
 {
-    Task<List<CostCenterDto>> GetWarehouses(Guid tenantId);
-    Task<CostCenterDto> GetWarehouseById(Guid tenantId, Guid id);
-    Task<CostCenterDto> InsertWarehouse(Guid tenantId, CostCenterDto warehouseEntity);
+    Task<List<WarehouseDto>> GetWarehouses(Guid tenantId);
+    Task<WarehouseDto> GetWarehouseById(Guid tenantId, Guid id);
+    Task<WarehouseDto> InsertWarehouse(Guid tenantId, WarehouseDto warehouseEntity);
     Task DeleteWarehouse(Guid tenantId, Guid id);
     Task UpdateWarehouse(Guid tenantId, WarehouseUpdateClass warehouseEntity);
     
@@ -144,5 +143,5 @@ public interface IWarehouseService
     Task<List<ItemEntity>> GetWarehouseItems(Guid warehouseId, String? name);
     */
     
-    Task InsertWarehouses(Guid tenantId, List<CostCenterDto> warehouses);
+    Task InsertWarehouses(Guid tenantId, List<WarehouseDto> warehouses);
 }

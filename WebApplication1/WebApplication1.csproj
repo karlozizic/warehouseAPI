@@ -17,11 +17,6 @@
         </PackageReference>
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-        <PackageReference Include="X.Auth.Middleware" Version="7.2.5" />
-        <PackageReference Include="X.Consul" Version="6.4.0" />
-        <PackageReference Include="X.LogMiddleware" Version="6.1.2" />
-        <PackageReference Include="X.PortUtility" Version="1.1.0" />
-        <PackageReference Include="X.Retail.Shared.Models" Version="4.1.0" />
     </ItemGroup>
 
 

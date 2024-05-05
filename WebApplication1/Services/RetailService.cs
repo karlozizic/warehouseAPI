@@ -1,11 +1,12 @@
-﻿using System.Net;
+﻿//This service was used to fetch Warehouses and FranchiseUsers from another Retail API
+/*using System.Net;
 using WebApplication1.Constants;
+using WebApplication1.Models;
 using X.Consul.Interface.Constants;
 using X.Consul.Interface.Services;
 using X.Retail.Shared.Models.Filters;
 using X.Retail.Shared.Models.Models.Dtos;
 using X.Retail.Shared.Models.Requests;
-using CostCenterDto = X.Retail.Shared.Models.Models.Dtos.CostCenterDto;
 
 namespace WebApplication1.Services;
 
@@ -20,7 +21,7 @@ public class RetailService : IRetailService
         _httpClient = httpClient;
         
     }
-    public async Task<List<X.Retail.Shared.Models.Models.Dtos.CostCenterDto>> FetchWarehouses(Guid tenantId, string? name, string? city)
+    public async Task<List<X.Retail.Shared.Models.Models.Dtos.WarehouseDto>> FetchWarehouses(Guid tenantId, string? name, string? city)
     {
         
         var payload = new CostCenterFilter()
@@ -30,7 +31,7 @@ public class RetailService : IRetailService
             PartialCity = city
         };
 
-        return await _requestService.PostWithDiscovery<List<CostCenterDto>>(
+        return await _requestService.PostWithDiscovery<List<WarehouseDto>>(
             Guid.Empty, 
             ApiNames.RetailApi,
             Endpoints.CostCenters,
@@ -71,6 +72,6 @@ public class RetailService : IRetailService
 
 public interface IRetailService
 {   
-    Task<List<X.Retail.Shared.Models.Models.Dtos.CostCenterDto>> FetchWarehouses(Guid tenantId, string? name, string? city);
-    Task<List<X.Retail.Shared.Models.Models.Dtos.FranchiseUserDto>> FetchFranchiseUsers(Guid tenantId);
-}
+    Task<List<WarehouseDto>> FetchWarehouses(Guid tenantId, string? name, string? city);
+    Task<List<WarehouseDto>> FetchFranchiseUsers(Guid tenantId);
+}*/

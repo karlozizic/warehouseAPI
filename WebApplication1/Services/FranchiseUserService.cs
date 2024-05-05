@@ -1,7 +1,6 @@
 ﻿using WebApplication1.Database.Entities;
 using WebApplication1.Interfaces;
 using WebApplication1.Models;
-using X.Retail.Shared.Models.Models.Dtos;
 
 namespace WebApplication1.Services;
 
@@ -25,6 +24,12 @@ public class FranchiseUserService : IFranchiseUserService
         }
         
         await _franchiseUserRepository.InsertAllFranchiseUsers(tenantId, franchiseUserEntities);
+    }
+
+    public async Task InsertFranchiseUser(FranchiseUserDto franchiseUserDto)
+    {
+        await _franchiseUserRepository.InsertFranchiseUser(new FranchiseUserEntity(franchiseUserDto.Id,
+            franchiseUserDto.UserId, franchiseUserDto.FranchiseId, franchiseUserDto.Username, franchiseUserDto.TenantId));
     }
     
     public async Task AssignToWarehouse(Guid tenantId, Guid franchiseUserId, Guid warehouseId)

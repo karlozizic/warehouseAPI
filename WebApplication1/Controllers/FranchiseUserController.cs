@@ -3,9 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using WebApplication1.Hubs;
 using WebApplication1.Interfaces;
+using WebApplication1.Models;
 using WebApplication1.Services;
-using X.Auth.Interface.Services;
-using X.Auth.Middleware.Attributes;
 
 namespace WebApplication1.Controllers;
 
@@ -15,30 +14,28 @@ public class FranchiseUserController : ControllerBase
 {
     private readonly ILogger<FranchiseUserController> _logger;
     private readonly IFranchiseUserService _franchiseUserService;
-    private readonly IRetailService _retailService;
-    private readonly IUserContextService _userContextService;
+    /*private readonly IRetailService _retailService;*/
     private readonly IHubContext<NotificationHub> _hubContext;
     
     public FranchiseUserController(ILogger<FranchiseUserController> logger, IFranchiseUserService franchiseUserService, 
-        IRetailService retailService, IUserContextService userContextService, IHubContext<NotificationHub> hubContext)
+        /*IRetailService retailService,*/ 
+        IHubContext<NotificationHub> hubContext)
     {
         _logger = logger;
         _franchiseUserService = franchiseUserService;
-        _retailService = retailService;
-        _userContextService = userContextService;
+        /*_retailService = retailService;*/
         _hubContext = hubContext;
     }
-    
-    [VerifyGrants("backoffice")]
-    [HttpPost(Name = "FetchFranchiseUsers")]
+    //This endpoint fetches franchise users from Retail API
+    /*[HttpPost(Name = "FetchFranchiseUsers")]
     [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     public async Task<IActionResult> FetchFranchiseUsers()
     {
         try
         {
-            var franchiseUsers = await _retailService.FetchFranchiseUsers(_userContextService.UserContext.TenantId);
-            await _franchiseUserService.InsertFranchiseUsers(_userContextService.UserContext.TenantId, franchiseUsers); 
+            var franchiseUsers = await _retailService.FetchFranchiseUsers();
+            await _franchiseUserService.InsertFranchiseUsers(franchiseUsers); 
             await _hubContext.Clients.All.SendAsync("ReceiveNotification", "Fetch FranchiseUsers Request");
             return Ok();
         }
@@ -46,17 +43,16 @@ public class FranchiseUserController : ControllerBase
         {
             return BadRequest(e.Message);
         }
-    }
+    }*/
 
-    [VerifyGrants("backoffice")]
     [HttpGet(Name = "FetchFranchiseUser")]
     [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.OK)]
-    public async Task<IActionResult> FetchFranchiseUserById([FromQuery] Guid franchiseUserId)
+    public async Task<IActionResult> FetchFranchiseUserById([FromQuery] Guid tenantId, [FromQuery] Guid franchiseUserId)
     {
         try
         { 
-            var franchiseUser = await _franchiseUserService.GetFranchiseUserById(_userContextService.UserContext.TenantId, franchiseUserId);
+            var franchiseUser = await _franchiseUserService.GetFranchiseUserById(tenantId, franchiseUserId);
             await _hubContext.Clients.All.SendAsync("ReceiveNotification", "Fetch FranchiseUser Request");
             return Ok(franchiseUser);
         }
@@ -66,21 +62,37 @@ public class FranchiseUserController : ControllerBase
         }
     }
     
-    [VerifyGrants("backoffice")]
     [HttpPost(Name="AssignOperator")]
     [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.OK)]
-    public async Task<IActionResult> AssignOperator([FromQuery] Guid franchiseUserId, [FromQuery] Guid warehouseId)
+    public async Task<IActionResult> AssignOperator([FromQuery] Guid tenantId, [FromQuery] Guid franchiseUserId, [FromQuery] Guid warehouseId)
     {
         try
         {
-            await _franchiseUserService.AssignToWarehouse(_userContextService.UserContext.TenantId, franchiseUserId, warehouseId);
+            await _franchiseUserService.AssignToWarehouse(tenantId, franchiseUserId, warehouseId);
             await _hubContext.Clients.All.SendAsync("ReceiveNotification", "Assign Operator Request");
             return Ok();
         }
         catch (Exception e)
         {
             return BadRequest(e.Message);
+        }
+    }
+    
+    
+    [HttpPost(Name = "CreateFranchiseUser")]
+    [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    public async Task<IActionResult> CreateFranchiseUser([FromBody] FranchiseUserDto franchiseUser)
+    {
+        try
+        {
+            await _franchiseUserService.InsertFranchiseUser(franchiseUser);
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message); 
         }
     }
 }
